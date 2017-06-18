@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack"
+
+    tools:context="com.dev3raby.infographic.Activities.InfographicActivity">
+
+
+    <ImageView
+        android:id="@+id/image_infographic"
+        android:src="@drawable/tumblr_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+
+        />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@android:color/white"
+        android:background="?attr/colorPrimary"
+        android:elevation="2dp">
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <Button
+                android:id="@+id/btn_favorite"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/ic_favorite_border"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+
+                />
+            <Button
+                android:id="@+id/btn_bookmark"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_bookmark_border"
+                android:layout_toStartOf="@+id/btn_favorite"
+                android:layout_toLeftOf="@+id/btn_favorite"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+
+                />
+
+            <Button
+                android:id="@+id/btn_share"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_action_share1"
+                android:layout_toStartOf="@+id/btn_bookmark"
+                android:layout_toLeftOf="@+id/btn_bookmark"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+
+                />
+
+            <Button
+                android:id="@+id/btn_back"
+
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/ic_arrow_back"
+                />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+    
+
+    <include
+        android:id="@+id/bottom_bar"
+        layout="@layout/bottom_bar"
+
+
+        ></include>
+</RelativeLayout>

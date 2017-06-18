@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Infographic</string>
+    <string name="follow_btn">Follow</string>
+    <string name="followed_btn">Unfollow</string>
+    <string name="visit_button">Visit</string>
+    <string name="add_comment_button">Add comment</string>
+    <string name="test_admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="testDeviceID">6686105664A3F125E73234FAE8ADAC8D</string>
+    <string name="hint_name">Full name</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_register">Sign up</string>
+    <string name="btn_link_to_login">Logged already! Sign in</string>
+    <string name="btn_login">Log in</string>
+    <string name="btn_link_to_register">Do not have account! Sign up now</string>
+
+</resources>

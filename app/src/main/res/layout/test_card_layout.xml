@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardCornerRadius="13dp"
+
+    >
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="340dp"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        card_view:cardBackgroundColor="@color/actionButtons"
+        card_view:cardCornerRadius="13dp">
+
+    </android.support.v7.widget.CardView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/details_card"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginEnd="223dp"
+        android:layout_marginRight="17dp"
+        android:layout_centerVertical="true"
+        android:background="#3F51B5">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/im_source_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="16dp"
+                android:src="@drawable/insta_icon"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/im_source_icon"
+                android:layout_toRightOf="@id/im_source_icon"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_source_name"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+
+
+
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/tv_infographic_name"
+            android:layout_width="150dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:text="تنفيذ العمليات"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/details_card"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+
+        >
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="25dp"
+            android:background="@drawable/vertical_divider"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginLeft="7dp"
+            ></View>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/divider"
+            android:layout_toRightOf="@id/divider"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_favorite_black_24dp">
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/btnComment"
+                    android:text="21"
+                    android:textSize="10sp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginLeft="2dp"
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_visibility_black_24dp">
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/btnComment"
+                    android:text="100"
+                    android:textSize="10sp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginLeft="2dp"
+
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+    <com.github.captain_miao.optroundcardview.OptRoundCardView
+        android:id="@+id/content_card_view"
+        android:layout_width="225dp"
+        android:layout_height="match_parent"
+
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+
+        android:layout_centerVertical="true"
+
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        app:optRoundCardCornerRadius="13dp"
+
+
+
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/im_infographic"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/info4"
+                android:scaleType="centerCrop"
+
+                />
+        </LinearLayout>
+    </com.github.captain_miao.optroundcardview.OptRoundCardView>
+
+</RelativeLayout>
+</android.support.v7.widget.CardView>
