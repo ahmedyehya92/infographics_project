@@ -74,7 +74,7 @@ public class BookmarkFragment extends Fragment {
     private void populatRecyclerView() {
         ArrayList<MainDataModel> arrayList = new ArrayList<>();
         for (int i = 0; i < SOURCE_NAME.length; i++) {
-            arrayList.add(new MainDataModel(INFOGRAPHIC_NAME[i], SOURCE_NAME[i], SOURSE_ICON[i], INFOGRAPHIC_IMAGE[i]));
+         //   arrayList.add(new MainDataModel(INFOGRAPHIC_NAME[i], SOURCE_NAME[i], SOURSE_ICON[i], INFOGRAPHIC_IMAGE[i]));
         }
         BookMarkRecyclerViewAdapter adapter = new BookMarkRecyclerViewAdapter(getActivity(), arrayList);
         mainRecyclerView.setAdapter(adapter);// set adapter on recyclerview

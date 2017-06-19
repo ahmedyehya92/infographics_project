@@ -44,9 +44,11 @@ public class MainRecyclerViewAdapter extends
 
         MainRecyclerViewHolder mainHolder = (MainRecyclerViewHolder) holder;// holder
 
-        Picasso.with(context)
-                .load(model.getSourceIcon().toString())
-                .into(mainHolder.sourceIcon);
+        if (model.getSourceIcon().toString() != "") {
+            Picasso.with(context)
+                    .load(model.getSourceIcon().toString())
+                    .into(mainHolder.sourceIcon);
+        }
         Picasso.with(context)
                 .load(model.getInfographicImage().toString())
                 .into(mainHolder.infographicImage);
@@ -73,4 +75,5 @@ public class MainRecyclerViewAdapter extends
         return listHolder;
 
     }
+
 }

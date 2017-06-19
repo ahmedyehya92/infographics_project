@@ -33,9 +33,12 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+
+
     private void setupViewPager(ViewPager viewPager) {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter (getSupportFragmentManager());
+
         adapter.addFragment(HomeFragment.newInstance("data for fragment 1"),"Home");
         adapter.addFragment(ExploreFragment.newInstance("data for fragment 2"),"Explore");
         adapter.addFragment(BookmarkFragment.newInstance("data for fragment 3"),"Bookmark");
@@ -43,5 +46,8 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
+
     }
+
+
 }
