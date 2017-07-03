@@ -12,13 +12,14 @@
 
     <ImageView
         android:id="@+id/image_infographic"
-        android:src="@drawable/tumblr_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
 
 
 
         />
+
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -26,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleTextColor="@android:color/white"
-        android:background="?attr/colorPrimary"
+        android:background="@drawable/bottom_bar_shape"
         android:elevation="2dp">
 
 
@@ -66,7 +67,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_centerVertical="true"
-                android:background="@drawable/ic_action_share1"
+                android:background="@drawable/ic_share"
                 android:layout_toStartOf="@+id/btn_bookmark"
                 android:layout_toLeftOf="@+id/btn_bookmark"
                 android:layout_marginEnd="8dp"

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="demo_snap_padding">60dp</dimen>
+    <dimen name="demo_snap_padding">16dp</dimen>
 </resources>

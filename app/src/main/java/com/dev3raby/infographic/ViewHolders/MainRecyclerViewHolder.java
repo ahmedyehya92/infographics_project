@@ -1,4 +1,4 @@
-package com.dev3raby.infographic.RecyclerViewHolders;
+package com.dev3raby.infographic.ViewHolders;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,11 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev3raby.infographic.Activities.InfographicActivity;
 import com.dev3raby.infographic.R;
-import com.dev3raby.infographic.RecyclerViewModels.MainDataModel;
+import com.dev3raby.infographic.DataModels.MainDataModel;
 
 import java.util.ArrayList;
 
@@ -59,13 +58,13 @@ public class MainRecyclerViewHolder extends RecyclerView.ViewHolder implements V
     @Override
     public void onClick(View v) {
 
-
+        final String id_key = "idKey";
         int position = getAdapterPosition();
         MainDataModel item = this.MainList.get(position);
 
-        Toast.makeText(contextA,item.getInfographicName(),Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(this.contextA, InfographicActivity.class);
+        intent.putExtra(id_key,item.getId());
         this.contextA.startActivity(intent);
 
 

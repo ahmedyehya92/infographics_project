@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="16dp"
+    android:layout_marginTop="16dp"
+    >
+    <TextView
+        android:id="@+id/tx_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:textSize="16sp"
+        android:text="صحة"
+        android:textColor="@color/colorBlack"
+        />
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="25dp"
+        android:background="@drawable/vertical_divider"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/tx_category"
+        android:layout_toRightOf="@id/tx_category"
+        android:layout_marginStart="7dp"
+        android:layout_marginLeft="7dp"
+        ></View>
+    <TextView
+        android:id="@+id/tx_num_Followers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/divider"
+        android:layout_toRightOf="@id/divider"
+        android:layout_marginStart="7dp"
+        android:layout_marginLeft="7dp"
+        android:textStyle="italic"
+        android:textColor="@color/btnComment"
+        android:text="25 متابع"
+        />
+
+    <Button
+        android:id="@+id/btn_follow"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/follow_btn"
+        android:textColor="@color/actionButtons"
+        android:background="@drawable/unfollowed_btn_shape"
+        />
+</RelativeLayout>
+</RelativeLayout>

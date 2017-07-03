@@ -3,17 +3,35 @@ package com.dev3raby.infographic.Fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.dev3raby.infographic.App.AppConfig;
+import com.dev3raby.infographic.App.AppController;
+import com.dev3raby.infographic.Helper.SQLiteHandler;
 import com.dev3raby.infographic.R;
-import com.dev3raby.infographic.RecyclerViewAdapters.BookMarkRecyclerViewAdapter;
-import com.dev3raby.infographic.RecyclerViewModels.MainDataModel;
+import com.dev3raby.infographic.Adapters.BookMarkRecyclerViewAdapter;
+import com.dev3raby.infographic.DataModels.MainDataModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Ahmed Yehya on 11/06/2017.
@@ -22,6 +40,20 @@ import java.util.ArrayList;
 public class BookmarkFragment extends Fragment {
     public static final String ARG_EXAMPLE = "this is a constant";
     private String example_data;
+    private boolean loading = true;
+    Integer page = 1;
+    private static JSONArray jsonArray;
+    private SQLiteHandler db;
+    private static String apiKey;
+    private static String user_id;
+    private static JSONObject infographic;
+    private static boolean lastItem;
+    Integer repeateConnection=0;
+    ArrayList<MainDataModel> arrayList = new ArrayList<>();
+    BookMarkRecyclerViewAdapter adapter;
+    SwipeRefreshLayout swipLayout;
+
+
 
     private static RecyclerView mainRecyclerView;
     public static final String[] SOURCE_NAME= {"Omar Yehya", "أحمد العربي", "seha.com", "Ali.Kindy", "arinfographic","arinfographic"};
@@ -47,6 +79,15 @@ public class BookmarkFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         example_data = getArguments().getString(ARG_EXAMPLE);
+
+        db = new SQLiteHandler(getContext());
+
+        HashMap<String, String> user = db.getUserDetails();
+        user_id = user.get("user_id");
+        apiKey = user.get("uid");
+        getBookmark(page,user_id,apiKey);
+
+
     }
 
     @Nullable
@@ -55,6 +96,10 @@ public class BookmarkFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_bookmarks,container,false);
         mainRecyclerView = (RecyclerView)
                 rootView.findViewById(R.id.main_recycler_view);
+        swipLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+
+        implementScrollListener();
+
 
         return rootView;
 
@@ -66,18 +111,262 @@ public class BookmarkFragment extends Fragment {
         mainRecyclerView
                 .setLayoutManager(testLayoutManager);
         populatRecyclerView();
+        swipLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                RequestQueue queue = AppController.getInstance().getRequestQueue();
+
+                if (queue!=null)
+                {
+                    queue.cancelAll("req_get_bookmark");
+
+                }
+                arrayList.clear();
+                page = 1;
+                lastItem=false;
+                getBookmark(page,user_id,apiKey);
+
+            }
+        });
+
 
 
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @Override
+    public void onStop() {
+
+        lastItem = false;
+
+        super.onStop();
+    }
+
     private void populatRecyclerView() {
-        ArrayList<MainDataModel> arrayList = new ArrayList<>();
-        for (int i = 0; i < SOURCE_NAME.length; i++) {
-         //   arrayList.add(new MainDataModel(INFOGRAPHIC_NAME[i], SOURCE_NAME[i], SOURSE_ICON[i], INFOGRAPHIC_IMAGE[i]));
-        }
-        BookMarkRecyclerViewAdapter adapter = new BookMarkRecyclerViewAdapter(getActivity(), arrayList);
+
+        adapter = new BookMarkRecyclerViewAdapter(getActivity(), arrayList);
         mainRecyclerView.setAdapter(adapter);// set adapter on recyclerview
         adapter.notifyDataSetChanged();
+    }
+
+    private void getBookmark(final Integer nPage, final String user_id, final String api_key) {
+        // Tag used to cancel the request
+        String tag_string_req = "req_get_bookmark";
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                AppConfig.URL_GET_BOOKMARK, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+
+                repeateConnection=0;
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+
+                    // Check for error node in json
+                    if (!error) {
+                        // user successfully logged in
+                        // Create login session
+
+                        jsonArray = jObj.getJSONArray("infographics");
+                        if (jsonArray.length()==0)
+                        {
+                            lastItem = true;
+
+                        }
+
+                        else {
+
+
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+
+                                infographic = jsonArray.getJSONObject(i);
+
+                                arrayList.add(new MainDataModel(infographic.getInt("id"), infographic.getString("name"), infographic.getString("source_name"), infographic.getString("type_icon_url"), infographic.getString("image_url")));
+
+
+                                getActivity().runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        // your stuff to update the UI
+
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
+                                if (swipLayout.isRefreshing())
+                                {
+                                    swipLayout.setRefreshing(false);
+                                }
+                                loading = true;
+                            }
+
+
+
+                            //   adsArrayList.add(mRecyclerViewItems.size()-1);
+
+
+                            //  addNativeExpressAds(mRecyclerViewItems.size()-2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        }
+
+                    } else {
+                        // Error in login. Get the error message
+                        //final String errorMsg = jObj.getString("message");
+
+                        //showAlertDialog(errorMsg);
+                    }
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+                if (repeateConnection <= 3)
+                {
+                    getBookmark(nPage, user_id, api_key);
+                    Toast.makeText(getActivity(),"error",Toast.LENGTH_SHORT).show();
+                    repeateConnection++;
+                }
+                else
+                {
+
+                    String msg = "خطأ في الإتصال برجاء المحاولة لاحقا";
+                    //showAlertDialog(msg);
+
+
+                }
+
+
+
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("page", nPage.toString());
+                params.put("user_id", user_id);
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+
+                headers.put("Authorization", api_key);
+                return headers;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private void implementScrollListener() {
+
+        mainRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+
+                if (loading) {
+
+
+                    if (dy > 0) //check for scroll down
+                    {
+                        int visibleItemCount = mainRecyclerView.getLayoutManager().getChildCount();
+                        int  totalItemCount = mainRecyclerView.getLayoutManager().getItemCount();
+                        int  pastVisiblesItems = ((LinearLayoutManager) mainRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            loading = false;
+
+                            Log.v("...", " Reached Last Item");
+
+                            loadMoreVideos();
+                        }
+
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    private void loadMoreVideos() {
+        // Show Progress Layout
+
+        // Handler to show refresh for a period of time you can use async task
+        // while commnunicating serve
+        if (lastItem!= true) {
+            page++;
+            getBookmark(page,user_id,apiKey);
+
+
+        }
+
+        else {
+
+        }
+
+        // notify adapter
+
+        // Toast for task completion
+
+
+        // After adding new data hide the view.
+
+    /*    new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+
+                // Loop for 3 items
+
+                loadBar.setVisibility(View.GONE);
+
+                // asynctask
+
+
+
+            }
+        }, 5000); */
     }
 }

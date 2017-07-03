@@ -1,4 +1,4 @@
-package com.dev3raby.infographic.RecyclerViewHolders;
+package com.dev3raby.infographic.ViewHolders;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.dev3raby.infographic.Activities.CatgInfographicsActivity;
 import com.dev3raby.infographic.R;
-import com.dev3raby.infographic.RecyclerViewModels.CategoryDataModel;
+import com.dev3raby.infographic.DataModels.CategoryDataModel;
 
 import java.util.ArrayList;
 

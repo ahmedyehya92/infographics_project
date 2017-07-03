@@ -9,9 +9,15 @@
         android:id="@+id/layout_bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_bar_shape"
+
+
+        >
+
 
         <Button
+            android:id="@+id/btn_visit"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginEnd="16dp"
@@ -25,6 +31,7 @@
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
             />
+        <!--
         <Button
             android:id="@+id/btn_add_comment"
             android:layout_width="wrap_content"
@@ -39,17 +46,17 @@
             android:layout_marginLeft="16dp"
             android:textColor="@color/btnComment"
             />
-
+ -->
        <View
            android:id="@+id/divider"
            android:layout_width="1dp"
            android:layout_height="25dp"
            android:background="@drawable/vertical_divider"
            android:layout_centerVertical="true"
-           android:layout_toEndOf="@id/btn_add_comment"
-           android:layout_toRightOf="@id/btn_add_comment"
-           android:layout_marginStart="7dp"
-           android:layout_marginLeft="7dp"
+           android:layout_alignParentStart="true"
+           android:layout_alignParentLeft="true"
+           android:layout_marginStart="16dp"
+           android:layout_marginLeft="16dp"
            ></View>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -74,6 +81,7 @@
             android:background="@drawable/ic_favorite_black_24dp">
         </ImageView>
                <TextView
+                   android:id="@+id/tx_like_counter"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:textColor="@color/btnComment"
@@ -98,6 +106,7 @@
                     android:background="@drawable/ic_visibility_black_24dp">
                 </ImageView>
                 <TextView
+                    android:id="@+id/tx_see_counter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/btnComment"

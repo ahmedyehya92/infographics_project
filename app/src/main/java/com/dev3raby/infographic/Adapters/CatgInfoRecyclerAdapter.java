@@ -1,4 +1,4 @@
-package com.dev3raby.infographic.RecyclerViewAdapters;
+package com.dev3raby.infographic.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.dev3raby.infographic.R;
-import com.dev3raby.infographic.RecyclerViewHolders.CatgInfoRecyclerViewHolder;
-import com.dev3raby.infographic.RecyclerViewModels.CatgInfoDataModel;
+import com.dev3raby.infographic.ViewHolders.CatgInfoRecyclerViewHolder;
+import com.dev3raby.infographic.DataModels.CatgInfoDataModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

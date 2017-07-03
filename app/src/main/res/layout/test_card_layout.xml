@@ -44,7 +44,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="16dp"
-                android:src="@drawable/insta_icon"
+
                 />
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -58,6 +58,10 @@
                     android:id="@+id/tv_source_name"
                     android:textColor="@color/white"
                     android:textStyle="bold"
+                    android:text="ma3lomita.com"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:textSize="12sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
@@ -190,7 +194,6 @@
                 android:id="@+id/im_infographic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/info4"
                 android:scaleType="centerCrop"
 
                 />

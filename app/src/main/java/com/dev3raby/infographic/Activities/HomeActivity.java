@@ -1,26 +1,52 @@
 package com.dev3raby.infographic.Activities;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 
 import com.dev3raby.infographic.Fragments.BookmarkFragment;
 import com.dev3raby.infographic.Fragments.ExploreFragment;
 import com.dev3raby.infographic.Fragments.HomeFragment;
+import com.dev3raby.infographic.Helper.SQLiteHandler;
+import com.dev3raby.infographic.Helper.SessionManager;
 import com.dev3raby.infographic.Helper.ViewPagerAdapter;
 import com.dev3raby.infographic.R;
+
 
 public class HomeActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private Button exitButton;
+    private SessionManager session;
+    private SQLiteHandler db;
+
+
+
     private int[] tabIcons = {R.drawable.ic_home_black_24dp,R.drawable.ic_explore_black_24dp,R.drawable.ic_collections_bookmark_black_24dp};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        session = new SessionManager(getApplicationContext());
+        db = new SQLiteHandler(getApplicationContext());
+        if (!session.isLoggedIn()) {
+            logoutUser();
+        }
+        exitButton = (Button) findViewById(R.id.btn_exit);
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutUser();
+
+            }
+        });
+
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -49,5 +75,20 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
 
+        super.onStop();
+    }
+
+    public void logoutUser() {
+        session.setLogin(false);
+
+        db.deleteUsers();
+
+        // Launching the login activity
+        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

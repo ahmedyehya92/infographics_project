@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.dev3raby.infographic.R;
-import com.dev3raby.infographic.RecyclerViewAdapters.CatgInfoRecyclerAdapter;
-import com.dev3raby.infographic.RecyclerViewModels.CatgInfoDataModel;
+import com.dev3raby.infographic.Adapters.CatgInfoRecyclerAdapter;
+import com.dev3raby.infographic.DataModels.CatgInfoDataModel;
 
 import java.util.ArrayList;
 

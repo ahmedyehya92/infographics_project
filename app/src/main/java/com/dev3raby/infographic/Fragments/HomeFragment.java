@@ -1,9 +1,9 @@
 package com.dev3raby.infographic.Fragments;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -18,15 +18,18 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.dev3raby.infographic.Activities.MainActivity;
 import com.dev3raby.infographic.App.AppConfig;
 import com.dev3raby.infographic.App.AppController;
 import com.dev3raby.infographic.Helper.SQLiteHandler;
 import com.dev3raby.infographic.Helper.SessionManager;
 import com.dev3raby.infographic.R;
-import com.dev3raby.infographic.RecyclerViewAdapters.MainRecyclerViewAdapter;
-import com.dev3raby.infographic.RecyclerViewModels.MainDataModel;
-import com.dev3raby.infographic.UI.SimpleDividerItemDecoration;
+import com.dev3raby.infographic.Adapters.MainRecyclerViewAdapter;
+import com.dev3raby.infographic.DataModels.LayoutTypeModel;
+import com.dev3raby.infographic.DataModels.MainDataModel;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.NativeExpressAdView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,9 +37,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import static android.support.v7.recyclerview.R.attr.layoutManager;
 
 /**
  * Created by Ahmed Yehya on 11/06/2017.
@@ -46,19 +48,23 @@ public class HomeFragment extends Fragment {
     public static final String ARG_EXAMPLE = "this is a constant";
     private String example_data;
     private boolean loading = true;
-    boolean userScrolled = false;
     Integer page = 1;
     private static JSONArray jsonArray;
     private SQLiteHandler db;
     private SessionManager session;
-    private static int status;
     private static String apiKey;
     private static String user_id;
     private static JSONObject infographic;
     private static boolean lastItem;
-    private static Integer repeateConnection=0;
+    Integer repeateConnection=0;
+    private static final int NATIVE_EXPRESS_AD_HEIGHT = 150;
+    private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/1072772517";
+    public static int ITEMS_PER_AD ;
+    public static boolean AD;
+    public static int isThereAds = 1;
 
-    ArrayList<MainDataModel> arrayList = new ArrayList<>();
+    private List<Object> mRecyclerViewItems = new ArrayList<>();
+    private List<Object> typeItemList = new ArrayList<>();
 
     private static RecyclerView mainRecyclerView;
     MainRecyclerViewAdapter adapter;
@@ -92,7 +98,13 @@ public class HomeFragment extends Fragment {
 
         user_id = user.get("user_id");
         apiKey = user.get("uid");
-        getInfographics(page.toString(),user_id,apiKey);
+
+        getInfographics(page,user_id,apiKey);
+
+
+
+
+
 
     }
 
@@ -103,6 +115,7 @@ public class HomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
         mainRecyclerView = (RecyclerView)
                 rootView.findViewById(R.id.main_recycler_view);
+
         implementScrollListener();
 
         return rootView;
@@ -118,7 +131,6 @@ public class HomeFragment extends Fragment {
     }
 
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
@@ -126,23 +138,25 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager testLayoutManager = new LinearLayoutManager(getContext());
         mainRecyclerView
                 .setLayoutManager(testLayoutManager);
-        populatRecyclerView();
+       populatRecyclerView();
 
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    private void populatRecyclerView() {
-
-        adapter = new MainRecyclerViewAdapter(getActivity(), arrayList);
-        mainRecyclerView.setAdapter(adapter);// set adapter on recyclerview
-        adapter.notifyDataSetChanged();
-
 
     }
 
-    private void getInfographics(final String nPage, final String user_id, final String api_key) {
+   private void populatRecyclerView() {
+
+
+       adapter = new MainRecyclerViewAdapter(getActivity(), mRecyclerViewItems, typeItemList);
+       mainRecyclerView.setAdapter(adapter);// set adapter on recyclerview
+       adapter.notifyDataSetChanged();
+
+
+    }
+
+    private void getInfographics(final Integer nPage, final String user_id, final String api_key) {
         // Tag used to cancel the request
-        String tag_string_req = "req_login";
+        String tag_string_req = "req_getInfographics";
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 AppConfig.URL_GET_FLLOWED_INFOGRAPHICS, new Response.Listener<String>() {
@@ -168,24 +182,53 @@ public class HomeFragment extends Fragment {
 
                         }
 
+                        else {
 
-                        for (int i = 0; i < jsonArray.length(); i++) {
+                            ITEMS_PER_AD = jsonArray.length()+1;
 
-                            infographic = jsonArray.getJSONObject(i);
-                            arrayList.add(new MainDataModel(infographic.getInt("id"), infographic.getString("name"), infographic.getString("source_name"), infographic.getString("type_icon_url"), infographic.getString("image_url")));
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                 AD = false;
+                                infographic = jsonArray.getJSONObject(i);
+
+                                mRecyclerViewItems.add(new MainDataModel(infographic.getInt("id"), infographic.getString("name"), infographic.getString("source_name"), infographic.getString("type_icon_url"), infographic.getString("image_url")));
+                                typeItemList.add(new LayoutTypeModel(1));
+
+                                getActivity().runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        // your stuff to update the UI
+
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
+                                loading = true;
+                            }
+
+                            addNativeAds();
+                            typeItemList.add(new LayoutTypeModel(0));
+
+
+                         //   adsArrayList.add(mRecyclerViewItems.size()-1);
+
+
+                              //  addNativeExpressAds(mRecyclerViewItems.size()-2);
 
 
 
 
-                            getActivity().runOnUiThread(new Runnable() {
 
-                                @Override
-                                public void run() {
-                                    // your stuff to update the UI
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-                         loading=true;
+
+
+
+
+                            Integer s = mRecyclerViewItems.size();
+                          //  Toast.makeText(getActivity(),s.toString(),Toast.LENGTH_SHORT).show();
+                            Log.d("size =",s.toString());
+
+
+
+
                         }
 
                     } else {
@@ -212,7 +255,7 @@ public class HomeFragment extends Fragment {
                 if (repeateConnection <= 3)
                 {
                     getInfographics(nPage, user_id, api_key);
-                   // Toast.makeText(LoginActivity.this,"error",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"error",Toast.LENGTH_SHORT).show();
                     repeateConnection++;
                 }
                 else
@@ -298,7 +341,7 @@ public class HomeFragment extends Fragment {
         // while commnunicating serve
         if (lastItem!= true) {
             page++;
-            getInfographics(page.toString(),user_id,apiKey);
+            getInfographics(page,user_id,apiKey);
 
 
         }
@@ -329,5 +372,93 @@ public class HomeFragment extends Fragment {
 
             }
         }, 5000); */
+    }
+
+    private void addNativeExpressAds() {
+
+        // Loop through the items array and place a new Native Express ad in every ith position in
+        // the items List.
+
+            final NativeExpressAdView adView = new NativeExpressAdView(getActivity());
+            mRecyclerViewItems.add(adView);
+
+    }
+
+    private void setUpAndLoadNativeExpressAds() {
+        // Use a Runnable to ensure that the RecyclerView has been laid out before setting the
+        // ad size for the Native Express ad. This allows us to set the Native Express ad's
+        // width to match the full width of the RecyclerView.
+        mainRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+
+                    final float scale = getActivity().getResources().getDisplayMetrics().density;
+                    // Set the ad size and ad unit ID for each Native Express ad in the items list.
+
+                        final NativeExpressAdView adView =
+                                (NativeExpressAdView) mRecyclerViewItems.get(mRecyclerViewItems.size()-1);
+
+                        final CardView cardView = (CardView) getActivity().findViewById(R.id.ad_card_view);
+                        final int adWidth = cardView.getWidth() - cardView.getPaddingLeft()
+                                - cardView.getPaddingRight();
+                        AdSize adSize = new AdSize((int) (adWidth / scale), NATIVE_EXPRESS_AD_HEIGHT);
+                        adView.setAdSize(adSize);
+                        adView.setAdUnitId(AD_UNIT_ID);
+
+
+                // Load the first Native Express ad in the items list.
+                loadNativeExpressAd();
+
+            }
+        });
+    }
+
+    private void loadNativeExpressAd() {
+
+
+
+        Object item = mRecyclerViewItems.get(mRecyclerViewItems.size()-1);
+        if (!(item instanceof NativeExpressAdView)) {
+            throw new ClassCastException("Expected item at index " + "nothing" + " to be a Native"
+                    + " Express ad.");
+        }
+
+        final NativeExpressAdView adView = (NativeExpressAdView) item;
+
+        // Set an AdListener on the NativeExpressAdView to wait for the previous Native Express ad
+        // to finish loading before loading the next ad in the items list.
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                // The previous Native Express ad loaded successfully, call this method again to
+                // load the next ad in the items list.
+                loadNativeExpressAd();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // The previous Native Express ad failed to load. Call this method again to load
+                // the next ad in the items list.
+                Log.e("MainActivity", "The previous Native Express ad failed to load. Attempting to"
+                        + " load the next Native Express ad in the items list.");
+                loadNativeExpressAd();
+            }
+        });
+
+        // Load the Native Express ad.
+        adView.loadAd(new AdRequest.Builder().build());
+    }
+    private void addNativeAds()
+    {
+
+            NativeExpressAdView adView = new NativeExpressAdView(getActivity());
+            adView.setAdSize(new AdSize(320,150));
+            adView.setAdUnitId(AD_UNIT_ID);
+            adView.loadAd(new AdRequest.Builder().build());
+            AD= true;
+            mRecyclerViewItems.add(adView);
+
+
     }
 }

@@ -1,14 +1,14 @@
-package com.dev3raby.infographic.RecyclerViewAdapters;
+package com.dev3raby.infographic.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.dev3raby.infographic.R;
-import com.dev3raby.infographic.RecyclerViewHolders.CategoryRecyclerViewHolder;
-import com.dev3raby.infographic.RecyclerViewModels.CategoryDataModel;
-import com.squareup.picasso.Picasso;
+import com.dev3raby.infographic.ViewHolders.CategoryRecyclerViewHolder;
+import com.dev3raby.infographic.DataModels.CategoryDataModel;
 
 import java.util.ArrayList;
 
@@ -43,7 +43,7 @@ public class CategoryRecyclerViewAdapter extends
 
         mainHolder.categoryName.setText(model.getCategoryName());
 
-        Picasso.with(context)
+        Glide.with(context)
                 .load(model.getCategoryIcon().toString())
                 .into(mainHolder.categoryIcon);
 
