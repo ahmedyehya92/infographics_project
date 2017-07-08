@@ -6,25 +6,24 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.dev3raby.infographic.DataModels.MainDataModel;
 import com.dev3raby.infographic.R;
-import com.dev3raby.infographic.ViewHolders.CatgInfoRecyclerViewHolder;
-import com.dev3raby.infographic.DataModels.CatgInfoDataModel;
-import com.squareup.picasso.Picasso;
+import com.dev3raby.infographic.ViewHolders.SearchRecyclerViewHolder;
 
 import java.util.ArrayList;
 
 /**
- * Created by Ahmed Yehya on 13/06/2017.
+ * Created by Ahmed Yehya on 07/07/2017.
  */
 
-public class CatgInfoRecyclerAdapter extends
-        RecyclerView.Adapter<CatgInfoRecyclerViewHolder> {
+public class SearchRecyclerViewAdapter extends
+        RecyclerView.Adapter<SearchRecyclerViewHolder>{
 
-    private ArrayList<CatgInfoDataModel> arrayList;
+    private ArrayList<MainDataModel> arrayList;
     private Context context;
 
-    public CatgInfoRecyclerAdapter(Context context,
-                                   ArrayList<CatgInfoDataModel> arrayList) {
+    public SearchRecyclerViewAdapter (Context context,
+                                        ArrayList<MainDataModel> arrayList) {
         this.context = context;
         this.arrayList = arrayList;
 
@@ -37,10 +36,10 @@ public class CatgInfoRecyclerAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(CatgInfoRecyclerViewHolder holder, int position) {
-        final CatgInfoDataModel model = arrayList.get(position);
+    public void onBindViewHolder(SearchRecyclerViewHolder holder, int position) {
+        final MainDataModel model = arrayList.get(position);
 
-        CatgInfoRecyclerViewHolder mainHolder = (CatgInfoRecyclerViewHolder) holder;// holder
+        SearchRecyclerViewHolder mainHolder = (SearchRecyclerViewHolder) holder;// holder
 
         Glide.with(context)
                 .load(model.getSourceIcon().toString())
@@ -63,14 +62,14 @@ public class CatgInfoRecyclerAdapter extends
 
     }
     @Override
-    public CatgInfoRecyclerViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public SearchRecyclerViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         // This method will inflate the custom layout and return as viewholder
         LayoutInflater mInflater = LayoutInflater.from(viewGroup.getContext());
 
         ViewGroup mainGroup = (ViewGroup) mInflater.inflate(
                 R.layout.test_card_layout, viewGroup, false);
-        CatgInfoRecyclerViewHolder listHolder = new CatgInfoRecyclerViewHolder(mainGroup,context,arrayList);
+        SearchRecyclerViewHolder listHolder = new SearchRecyclerViewHolder(mainGroup,context,arrayList);
         return listHolder;
 
     }

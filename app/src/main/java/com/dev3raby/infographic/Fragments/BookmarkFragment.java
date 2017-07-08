@@ -85,7 +85,7 @@ public class BookmarkFragment extends Fragment {
         HashMap<String, String> user = db.getUserDetails();
         user_id = user.get("user_id");
         apiKey = user.get("uid");
-        getBookmark(page,user_id,apiKey);
+       // getBookmark(page,user_id,apiKey);
 
 
     }
@@ -123,6 +123,7 @@ public class BookmarkFragment extends Fragment {
 
                 }
                 arrayList.clear();
+
                 page = 1;
                 lastItem=false;
                 getBookmark(page,user_id,apiKey);
@@ -141,6 +142,29 @@ public class BookmarkFragment extends Fragment {
         lastItem = false;
 
         super.onStop();
+    }
+
+    @Override
+    public void onStart() {
+        swipLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipLayout.setRefreshing(true);
+                RequestQueue queue = AppController.getInstance().getRequestQueue();
+
+                if (queue!=null)
+                {
+                    queue.cancelAll("req_get_bookmark");
+
+                }
+                arrayList.clear();
+
+                page = 1;
+                lastItem=false;
+                getBookmark(page,user_id,apiKey);
+            }
+        });
+        super.onStart();
     }
 
     private void populatRecyclerView() {
@@ -186,22 +210,11 @@ public class BookmarkFragment extends Fragment {
 
                                 infographic = jsonArray.getJSONObject(i);
 
-                                arrayList.add(new MainDataModel(infographic.getInt("id"), infographic.getString("name"), infographic.getString("source_name"), infographic.getString("type_icon_url"), infographic.getString("image_url")));
+                                arrayList.add(new MainDataModel(infographic.getInt("id"), infographic.getString("name"), infographic.getString("source_name"), infographic.getString("type_icon_url"), infographic.getString("image_url"), infographic.getInt("like_counter"), infographic.getInt("seen")));
 
 
-                                getActivity().runOnUiThread(new Runnable() {
 
-                                    @Override
-                                    public void run() {
-                                        // your stuff to update the UI
 
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                });
-                                if (swipLayout.isRefreshing())
-                                {
-                                    swipLayout.setRefreshing(false);
-                                }
                                 loading = true;
                             }
 
@@ -226,6 +239,15 @@ public class BookmarkFragment extends Fragment {
 
 
                         }
+                        getActivity().runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // your stuff to update the UI
+
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
 
                     } else {
                         // Error in login. Get the error message
@@ -233,6 +255,11 @@ public class BookmarkFragment extends Fragment {
 
                         //showAlertDialog(errorMsg);
                     }
+                    if (swipLayout.isRefreshing())
+                    {
+                        swipLayout.setRefreshing(false);
+                    }
+
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();

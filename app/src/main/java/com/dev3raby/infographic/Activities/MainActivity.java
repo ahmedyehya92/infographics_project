@@ -99,9 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void populatRecyclerView() {
         ArrayList<MainDataModel> arrayList = new ArrayList<>();
-        for (int i = 0; i < SOURCE_NAME.length; i++) {
-            mRecyclerViewItems.add(new MainDataModel(ID[i],INFOGRAPHIC_NAME[i],SOURCE_NAME[i], SOURSE_ICON[i], INFOGRAPHIC_IMAGE[i]));
-        }
+
     /*    MainRecyclerViewAdapter adapter = new MainRecyclerViewAdapter(MainActivity.this, mRecyclerViewItems);
         mainRecyclerView.setAdapter(adapter);// set adapter on recyclerview
         adapter.notifyDataSetChanged();*/

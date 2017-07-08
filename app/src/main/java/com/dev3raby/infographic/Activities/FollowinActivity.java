@@ -1,7 +1,10 @@
 package com.dev3raby.infographic.Activities;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,11 +30,13 @@ import java.util.Map;
 
 public class FollowinActivity extends AppCompatActivity {
 
-    private ListView mListView;
-    public ArrayList<Category> categoriesList;
+    public static ListView mListView;
+    public static ArrayList<Category> categoriesList;
     private SQLiteHandler db;
     private  String api_key;
     private  String user_id;
+    final String idKey = "idKey";
+    final String apiKey = "apiKey";
     CategoryAdapter adapter;
     private static JSONArray jsonArray;
     private static JSONObject category;
@@ -45,13 +50,30 @@ public class FollowinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_followin);
 
+        FloatingActionButton FAB = (FloatingActionButton) findViewById(R.id.fab);
+        FAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(
+                        FollowinActivity.this,
+                        LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
         categoriesList = new ArrayList<Category>();
         db = new SQLiteHandler(FollowinActivity.this);
         HashMap<String, String> user = db.getUserDetails();
 
 
-        user_id = user.get("user_id");
-        api_key = user.get("uid");
+     //   user_id = user.get("user_id");
+    //    api_key = user.get("uid");
+
+        Intent idIntent = getIntent();
+        user_id = idIntent.getStringExtra(idKey);
+        api_key = idIntent.getStringExtra(apiKey);
 
         mListView = (ListView) findViewById(R.id.list);
         adapter = new CategoryAdapter(getApplicationContext(),categoriesList, api_key, user_id);

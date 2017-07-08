@@ -4,12 +4,14 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".App.AppController"
         android:allowBackup="true"
-        android:hardwareAccelerated="false"
-        android:icon="@mipmap/icon_lunch"
+        android:icon="@drawable/noty_icon"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
@@ -32,7 +34,6 @@
             android:theme="@style/Base.Theme.DesignDemo" />
         <activity
             android:name=".Activities.InfographicActivity"
-
             android:theme="@style/Base.Theme.DesignDemo" />
         <activity
             android:name=".Activities.LoginActivity"
@@ -46,9 +47,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.FollowinActivity"
-            android:theme="@style/Base.Theme.DesignDemo"
+        <activity
+            android:name=".Activities.FollowinActivity"
+            android:theme="@style/Base.Theme.DesignDemo" />
 
+        <service
+            android:name=".Helper.FCMService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".Helper.FCMRegistrationService" />
+        <service
+            android:name=".Helper.FCMTokenRefreshListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".Activities.NotificationActivity" />
+        <activity android:name=".Activities.SearchActivity"
+            android:theme="@style/Base.Theme.DesignDemo"
+            android:exported="true"
             ></activity>
     </application>
 

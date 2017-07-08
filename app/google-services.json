@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "419735575423",
+    "firebase_url": "https://infographics-project.firebaseio.com",
+    "project_id": "infographics-project",
+    "storage_bucket": "infographics-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:419735575423:android:fe0d7103418a360f",
+        "android_client_info": {
+          "package_name": "com.dev3raby.infographic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "419735575423-l97ahp487e3v4b4gadaehrp8cph99ntu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dev3raby.infographic",
+            "certificate_hash": "ef0451da5e4fd972dc3d15a2974c0f1eb6802d06"
+          }
+        },
+        {
+          "client_id": "419735575423-8tkagb6evs1pkn4p410ceeir0elom4eh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCApxQkfzsUOR5xeT9fsWtE0v_zoVXGUMs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "419735575423-8tkagb6evs1pkn4p410ceeir0elom4eh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

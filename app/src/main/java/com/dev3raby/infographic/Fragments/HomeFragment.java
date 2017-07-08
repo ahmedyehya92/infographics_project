@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -51,7 +52,6 @@ public class HomeFragment extends Fragment {
     Integer page = 1;
     private static JSONArray jsonArray;
     private SQLiteHandler db;
-    private SessionManager session;
     private static String apiKey;
     private static String user_id;
     private static JSONObject infographic;
@@ -99,8 +99,11 @@ public class HomeFragment extends Fragment {
         user_id = user.get("user_id");
         apiKey = user.get("uid");
 
-        getInfographics(page,user_id,apiKey);
+        //list title item
+        typeItemList.add(new LayoutTypeModel(2));
+        mRecyclerViewItems.add(2);  // any thing just for reserve item in recyclerview
 
+        getInfographics(page,user_id,apiKey);
 
 
 
@@ -116,12 +119,15 @@ public class HomeFragment extends Fragment {
         mainRecyclerView = (RecyclerView)
                 rootView.findViewById(R.id.main_recycler_view);
 
+
+
         implementScrollListener();
 
         return rootView;
 
 
     }
+
 
     @Override
     public void onStop() {
@@ -133,6 +139,11 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
+
+
+
+
 
         StaggeredGridLayoutManager mainLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         LinearLayoutManager testLayoutManager = new LinearLayoutManager(getContext());
@@ -156,6 +167,11 @@ public class HomeFragment extends Fragment {
 
     private void getInfographics(final Integer nPage, final String user_id, final String api_key) {
         // Tag used to cancel the request
+
+
+
+
+
         String tag_string_req = "req_getInfographics";
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -190,7 +206,7 @@ public class HomeFragment extends Fragment {
                                  AD = false;
                                 infographic = jsonArray.getJSONObject(i);
 
-                                mRecyclerViewItems.add(new MainDataModel(infographic.getInt("id"), infographic.getString("name"), infographic.getString("source_name"), infographic.getString("type_icon_url"), infographic.getString("image_url")));
+                                mRecyclerViewItems.add(new MainDataModel(infographic.getInt("id"), infographic.getString("name"), infographic.getString("source_name"), infographic.getString("type_icon_url"), infographic.getString("image_url"), infographic.getInt("like_counter"), infographic.getInt("seen")));
                                 typeItemList.add(new LayoutTypeModel(1));
 
                                 getActivity().runOnUiThread(new Runnable() {
@@ -206,8 +222,8 @@ public class HomeFragment extends Fragment {
                             }
 
                             addNativeAds();
-                            typeItemList.add(new LayoutTypeModel(0));
 
+                            typeItemList.add(new LayoutTypeModel(0));
 
                          //   adsArrayList.add(mRecyclerViewItems.size()-1);
 
@@ -237,6 +253,9 @@ public class HomeFragment extends Fragment {
 
                         //showAlertDialog(errorMsg);
                     }
+
+
+
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();

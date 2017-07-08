@@ -44,6 +44,8 @@ public class CategoryRecyclerViewHolder extends RecyclerView.ViewHolder implemen
     @Override
     public void onClick(View v) {
 
+        final String categoryIdKey = "categoryIdKey";
+        final String categoryNameKey = "categoryNameKey";
 
         int position = getAdapterPosition();
         CategoryDataModel item = this.categoriesList.get(position);
@@ -51,6 +53,8 @@ public class CategoryRecyclerViewHolder extends RecyclerView.ViewHolder implemen
         Toast.makeText(contextA,item.getCategoryName(),Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(this.contextA, CatgInfographicsActivity.class);
+        intent.putExtra(categoryIdKey,item.getId());
+        intent.putExtra(categoryNameKey, item.getCategoryName());
         this.contextA.startActivity(intent);
 
     }

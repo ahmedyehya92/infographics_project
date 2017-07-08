@@ -24,6 +24,9 @@ public class CatgInfoRecyclerViewHolder extends RecyclerView.ViewHolder implemen
     public TextView sourceName;
     public ImageView sourceIcon;
     public ImageView infographicImage;
+    public TextView like_counter;
+    public TextView seen_counter;
+
 
 
     ArrayList<CatgInfoDataModel> MainList = new ArrayList<CatgInfoDataModel>();
@@ -52,19 +55,24 @@ public class CatgInfoRecyclerViewHolder extends RecyclerView.ViewHolder implemen
         this.infographicImage = (ImageView) view
                 .findViewById(R.id.im_infographic);
 
+        this.like_counter = (TextView) view.findViewById(R.id.tx_fav_counter);
 
+        this.seen_counter = (TextView) view.findViewById(R.id.tx_seen_counter);
 
     }
 
     @Override
     public void onClick(View v) {
 
+        final String id_key = "idKey";
 
         int position = getAdapterPosition();
         CatgInfoDataModel item = this.MainList.get(position);
 
         Toast.makeText(contextA,item.getInfographicName(),Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this.contextA, InfographicActivity.class);
+        intent.putExtra(id_key,item.getCIId());
+
         this.contextA.startActivity(intent);
 
 

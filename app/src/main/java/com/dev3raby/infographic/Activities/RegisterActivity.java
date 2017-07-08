@@ -136,9 +136,14 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "تم التسجيل بنجاح، قم بتسجيل الدخول الآن", Toast.LENGTH_LONG).show();
 
                         // Launch login activity
+                        final String id_key = "idKey";
+                        final String api_key = "apiKey";
+
                         Intent intent = new Intent(
                                 RegisterActivity.this,
-                                LoginActivity.class);
+                                FollowinActivity.class);
+                        intent.putExtra(id_key,user_id);
+                        intent.putExtra(api_key,uid);
                         startActivity(intent);
                         finish();
                     } else {

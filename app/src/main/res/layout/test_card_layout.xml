@@ -7,73 +7,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardUseCompatPadding="true"
-    card_view:cardCornerRadius="13dp"
+    card_view:cardCornerRadius="0dp"
+    android:layout_margin="4dp"
+
 
     >
 
 
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="340dp"
+    android:layout_height="260dp"
     >
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp">
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        card_view:cardBackgroundColor="@color/actionButtons"
-        card_view:cardCornerRadius="13dp">
 
-    </android.support.v7.widget.CardView>
-    </RelativeLayout>
     <RelativeLayout
         android:id="@+id/details_card"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginEnd="223dp"
-        android:layout_marginRight="17dp"
-        android:layout_centerVertical="true"
-        android:background="#3F51B5">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        android:layout_height="210dp"
+        android:layout_marginEnd="188dp"
+        android:layout_marginRight="188dp"
+        android:layout_alignParentTop="true"
+        android:background="#1976D2"
 
-            <ImageView
-                android:id="@+id/im_source_icon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="16dp"
+        >
 
-                />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/im_source_icon"
-                android:layout_toRightOf="@id/im_source_icon"
-                android:layout_centerVertical="true"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_source_name"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:text="ma3lomita.com"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
-                    android:textSize="12sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-
-
-
-
-                    />
-
-            </LinearLayout>
-
-        </RelativeLayout>
         <TextView
             android:id="@+id/tv_infographic_name"
             android:layout_width="150dp"
@@ -85,120 +41,174 @@
             android:layout_marginLeft="24dp"
             android:text="تنفيذ العمليات"
             android:textColor="@color/white"
-            android:textSize="24sp"
+            android:textSize="16sp"
             />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_below="@id/details_card"
-        android:layout_marginTop="8dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+
 
         >
-        <View
-            android:id="@+id/divider"
-            android:layout_width="1dp"
-            android:layout_height="25dp"
-            android:background="@drawable/vertical_divider"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="7dp"
-            android:layout_marginLeft="7dp"
-            ></View>
+
+
+    <ImageView
+        android:id="@+id/im_source_icon"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+
+
+
+
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/im_source_icon"
+        android:layout_toLeftOf="@id/im_source_icon"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_source_name"
+            android:textColor="@color/btnComment"
+            android:textStyle="bold"
+            android:text="ma3lomita.com"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:textSize="10sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+
+
+
+
+            />
+
+    </LinearLayout>
+
+
+
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="25dp"
+        android:background="@drawable/vertical_divider"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        ></View>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/divider"
+        android:layout_toRightOf="@id/divider"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        >
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/divider"
-            android:layout_toRightOf="@id/divider"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            >
-            <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center">
+
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_favorite_black_24dp">
-                </ImageView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/btnComment"
-                    android:text="21"
-                    android:textSize="10sp"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginLeft="2dp"
-
-                    />
-            </LinearLayout>
-
-            <LinearLayout
+                android:background="@drawable/ic_favorite_black_24dp">
+            </ImageView>
+            <TextView
+                android:id="@+id/tx_fav_counter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:textColor="@color/btnComment"
+                tools:text="21"
+                android:textSize="10sp"
+                android:layout_marginStart="2dp"
+                android:layout_marginLeft="2dp"
 
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ic_visibility_black_24dp">
-                </ImageView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/btnComment"
-                    android:text="100"
-                    android:textSize="10sp"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginLeft="2dp"
-
-                    />
-            </LinearLayout>
+                />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_visibility_black_24dp">
+            </ImageView>
+            <TextView
+                android:id="@+id/tx_seen_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/btnComment"
+                tools:text="100"
+                android:textSize="10sp"
+                android:layout_marginStart="2dp"
+                android:layout_marginLeft="2dp"
+
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
     </RelativeLayout>
-    <com.github.captain_miao.optroundcardview.OptRoundCardView
+    <RelativeLayout
         android:id="@+id/content_card_view"
-        android:layout_width="225dp"
-        android:layout_height="match_parent"
+        android:layout_width="190dp"
+        android:layout_height="210dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
 
-        android:paddingStart="16dp"
-        android:paddingLeft="16dp"
 
-        android:layout_centerVertical="true"
+
 
 
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        app:optRoundCardCornerRadius="13dp"
+
 
 
 
         >
+
         <LinearLayout
+
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+
+            >
+
             <ImageView
                 android:id="@+id/im_infographic"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="190dp"
+                android:layout_height="210dp"
                 android:scaleType="centerCrop"
 
                 />
         </LinearLayout>
-    </com.github.captain_miao.optroundcardview.OptRoundCardView>
+    </RelativeLayout>
 
 </RelativeLayout>
 </android.support.v7.widget.CardView>

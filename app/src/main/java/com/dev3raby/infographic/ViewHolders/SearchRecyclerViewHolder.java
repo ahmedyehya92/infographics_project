@@ -8,16 +8,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dev3raby.infographic.Activities.InfographicActivity;
-import com.dev3raby.infographic.R;
 import com.dev3raby.infographic.DataModels.MainDataModel;
+import com.dev3raby.infographic.R;
 
 import java.util.ArrayList;
 
 /**
- * Created by Ahmed Yehya on 05/06/2017.
+ * Created by Ahmed Yehya on 07/07/2017.
  */
 
-public class MainRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class SearchRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public TextView infographicName;
     public TextView sourceName;
@@ -26,13 +26,10 @@ public class MainRecyclerViewHolder extends RecyclerView.ViewHolder implements V
     public TextView like_counter;
     public TextView seen_counter;
 
-
     ArrayList<MainDataModel> MainList = new ArrayList<MainDataModel>();
     Context contextA;
 
-
-
-    public MainRecyclerViewHolder(View view, Context contextA, ArrayList<MainDataModel> MainList) {
+    public SearchRecyclerViewHolder(View view, Context contextA, ArrayList<MainDataModel> MainList) {
         super(view);
         // Find all views ids
 
@@ -75,4 +72,5 @@ public class MainRecyclerViewHolder extends RecyclerView.ViewHolder implements V
 
 
     }
+
 }

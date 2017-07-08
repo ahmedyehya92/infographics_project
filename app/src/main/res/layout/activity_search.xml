@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/catginfo_recycler_view"
+        android:id="@+id/search_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
@@ -23,52 +23,46 @@
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/bottom_bar_shape"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
 
                 <Button
-                    android:id="@+id/btn_follow"
+                    android:id="@+id/btn_back"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/ic_arrow_back"
+                    />
+
+                <android.support.v7.widget.SearchView
+                    android:id="@+id/search_view"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
-                    android:text="@string/follow_btn"
-                    android:textColor="@color/lite_gray"
-                    android:background="@drawable/disapled_follow_btn"
+                    android:focusable="true"
+
+
+                    android:queryHint="بحث"
+
+                    style="@style/SearchViewStyle"
+
                     />
 
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:background="@drawable/ic_arrow_back_black_24dp"
-        />
 
-    <TextView
-        android:id="@+id/tx_category_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/btn_back"
-        android:layout_toRightOf="@id/btn_back"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:textColor="@color/colorBlack"
-        android:textSize="16sp"
-        />
 
-</RelativeLayout>
+            </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
 

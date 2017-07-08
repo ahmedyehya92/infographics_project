@@ -1,7 +1,9 @@
 package com.dev3raby.infographic.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +23,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.dev3raby.infographic.App.AppConfig;
 import com.dev3raby.infographic.App.AppController;
 import com.dev3raby.infographic.Helper.SQLiteHandler;
@@ -31,8 +35,14 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -45,7 +55,7 @@ public class InfographicActivity extends AppCompatActivity {
     boolean isDetailVisible = true;
     private boolean liked = false;
     private boolean bookmarked = false;
-
+    private static Bitmap bitmapShare;
     private SQLiteHandler db;
 
 
@@ -57,7 +67,7 @@ public class InfographicActivity extends AppCompatActivity {
 
     private String link;
     Integer repeateConnection=0;
-    private Button likeButton, bookmarkButton, backButton, visitButton;
+    private Button likeButton, bookmarkButton, backButton, visitButton, shareButton;
     private TextView likeText, seeText;
     private Animation bottomBarAnimShow, bottomBarAnimHide, toolbarAnimationShow, toolbarAnimationHide;
     View mDecorView;
@@ -81,6 +91,13 @@ public class InfographicActivity extends AppCompatActivity {
         toolbar.setVisibility(View.GONE);
         bottomBar.setVisibility(View.GONE);
         getInfographic(user_id,id,apiKey);
+
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startShare();
+            }
+        });
 
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +146,7 @@ public class InfographicActivity extends AppCompatActivity {
         visitButton = (Button) findViewById(R.id.btn_visit);
 
         backButton = (Button) findViewById(R.id.btn_back);
-
+        shareButton = (Button) findViewById(R.id.btn_share);
         likeButton = (Button) findViewById(R.id.btn_favorite);
         likeButton.setSoundEffectsEnabled(false);
 
@@ -264,10 +281,37 @@ public class InfographicActivity extends AppCompatActivity {
                         isLiked();
                         isBookmarked();
 
+                        toolbar.setVisibility(View.VISIBLE);
+                        toolbar.startAnimation(toolbarAnimationShow);
+
+                        bottomBar.setVisibility(View.VISIBLE);
+                        bottomBar.startAnimation(bottomBarAnimShow);
 
                         JSONObject infographic = jObj.getJSONObject("infographic");
 
-                        Picasso.with(InfographicActivity.this)
+                 /*       try {
+                            Bitmap theBitmap = Glide.
+                                    with(InfographicActivity.this).
+                                    load(infographic.getString("image_url")).
+                                    asBitmap().
+                                    into(100, 100). // Width and height
+                                    get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } */
+
+                        Glide
+                                .with( InfographicActivity.this ) // could be an issue!
+                                .load( infographic.getString("image_url" ))
+                                .asBitmap()
+                                .into( target );
+
+
+
+
+               /*         Picasso.with(InfographicActivity.this)
                                 .load(infographic.getString("image_url"))
                                 .into(infographicView, new Callback.EmptyCallback() {
                                     @Override public void onSuccess() {
@@ -281,7 +325,7 @@ public class InfographicActivity extends AppCompatActivity {
 
                                     }
                                 });
-
+*/
 
 
 
@@ -313,9 +357,14 @@ public class InfographicActivity extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (repeateConnection == 0) {
+                    toolbar.setVisibility(View.VISIBLE);
+                    toolbar.startAnimation(toolbarAnimationShow);
 
-
-                if (repeateConnection <= 3)
+                    bottomBar.setVisibility(View.VISIBLE);
+                    bottomBar.startAnimation(bottomBarAnimShow);
+                }
+                if (repeateConnection <= 2)
                 {
                     getInfographic(user_id,infographic_id, api_key);
                     Toast.makeText(InfographicActivity.this,"error",Toast.LENGTH_SHORT).show();
@@ -572,5 +621,41 @@ public class InfographicActivity extends AppCompatActivity {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
+    private SimpleTarget target = new SimpleTarget<Bitmap>() {
+        @Override
+        public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
+            // do something with the bitmap
+            // for demonstration purposes, let's just set it to an ImageView
+
+
+            infographicView.setImageBitmap( bitmap );
+
+            mAttacher.update();
+
+            bitmapShare = bitmap;
+
+        }
+    };
+
+public void startShare()
+{
+    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+    shareIntent.setType("image/jpeg");
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    bitmapShare.compress(Bitmap.CompressFormat.JPEG,100, byteArrayOutputStream);
+    File file = new File(Environment.getExternalStorageDirectory()+ File.separator+ "image.jpg");
+
+    try {
+        file.createNewFile();
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        fileOutputStream.write(byteArrayOutputStream.toByteArray());
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://sdcard/image.jpg"));
+    startActivity(Intent.createChooser(shareIntent,"مشاركة الإنفوجرافيك"));
+}
+
 
 }

@@ -1,14 +1,18 @@
 package com.dev3raby.infographic.Adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +44,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
     String apiKey;
     String userId;
     ViewHolder viewHolder;
+    View listItemView;
     private static boolean followed = false;
 
 
@@ -55,7 +60,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
     @NonNull
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View listItemView = convertView;
+        listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.category_list_item, parent, false);
         }
@@ -96,25 +101,10 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                     viewHolder.followButton.setText(context.getResources().getString(R.string.follow_btn));
                     followed = false;
                 } */
-                bookmarkAction(userId,currentCategory.getCatId(),apiKey, new VolleyCallback(){
-                    @Override
-                    public void onSuccess(Boolean isFollowed){
-                        if (isFollowed)
-                        {
 
-                            Integer pos = position;
-                            Toast.makeText(context, "تمت متابعة القسم " + currentCategory.getCategoryName(),Toast.LENGTH_SHORT).show();
-                           // FollowinActivity.categoriesList.remove(position);
+           followAction(userId,currentCategory.getCatId(),apiKey,position);
 
-                          //  notifyDataSetChanged();
-                        }
-                        else
-                        {
-                            Toast.makeText(context, "انت بالفعل تتابع هذا القسم",Toast.LENGTH_SHORT).show();
 
-                        }
-                    }
-                });
             }
         });
 
@@ -135,7 +125,23 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 
     }
 
-    private void bookmarkAction(final String user_id,final String category_id, final String api_key,  final VolleyCallback callback) {
+    protected void removeListItem(View rowView, final int positon) {
+        final Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_out_right);
+        rowView.startAnimation(animation);
+        Handler handle = new Handler();
+        handle.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                FollowinActivity.categoriesList.remove(positon);
+                notifyDataSetChanged();
+                animation.cancel();
+
+
+            }
+        }, 100);
+    }
+
+    private void followAction(final String user_id,final String category_id, final String api_key,  final int position) {
         // Tag used to cancel the request
 
         String tag_string_req = "req_follow_action";
@@ -156,7 +162,26 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                     if (!error) {
 
                         Boolean isFollowed = jObj.getBoolean("isFollowed");
-                        callback.onSuccess(isFollowed);
+                        if (isFollowed)
+                        {
+
+                      /*      Integer pos = position;
+                            Toast.makeText(context, "تمت متابعة القسم " + currentCategory.getCategoryName(),Toast.LENGTH_SHORT).show();
+                            FollowinActivity.categoriesList.remove(position);
+
+                            notifyDataSetChanged(); */
+
+                            removeListItem(getViewByPosition(position,FollowinActivity.mListView),position);
+                            Toast.makeText(context, "تمت متابعة القسم " ,Toast.LENGTH_SHORT).show();
+
+                        }
+                        else
+                        {
+
+                            Toast.makeText(context,isFollowed.toString(),Toast.LENGTH_SHORT).show();
+
+
+                        }
 
 
 
@@ -183,10 +208,10 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 
 
 
-
                     String msg = "خطأ في الإتصال برجاء المحاولة لاحقا";
                     //showAlertDialog(msg);
 
+                Toast.makeText(context,"error-response",Toast.LENGTH_SHORT).show();
 
 
             }
@@ -219,6 +244,18 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 
     public interface VolleyCallback{
         void onSuccess(Boolean result);
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 
 }

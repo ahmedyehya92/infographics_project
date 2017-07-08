@@ -2,6 +2,7 @@ package com.dev3raby.infographic.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +11,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.Target;
 import com.dev3raby.infographic.Activities.InfographicActivity;
 import com.dev3raby.infographic.R;
 import com.dev3raby.infographic.DataModels.LayoutTypeModel;
 import com.dev3raby.infographic.DataModels.MainDataModel;
 import com.google.android.gms.ads.NativeExpressAdView;
 
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Ahmed Yehya on 05/06/2017.
@@ -26,11 +40,13 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private final List<Object> mRecyclerViewItems;
     private List<Object> mItemType;
+    private Bitmap newBitmap;
     // A menu item view type.
     private static final int MENU_ITEM_VIEW_TYPE = 0;
 
     // The Native Express ad view type.
     private static final int NATIVE_EXPRESS_AD_VIEW_TYPE = 1;
+    private static final int FIRST_ITEM_VIEWTYPE = 2;
 
 
 
@@ -56,10 +72,17 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         final LayoutTypeModel modelType = (LayoutTypeModel) mItemType.get(position);
 
-        if (modelType.getLayoutType()==1)
+        if (modelType.getLayoutType()==2)
+        {
+            return FIRST_ITEM_VIEWTYPE;
+        }
+
+        else if (modelType.getLayoutType()==1)
         {
             return MENU_ITEM_VIEW_TYPE;
         }
+
+
 
         else {
             return NATIVE_EXPRESS_AD_VIEW_TYPE;
@@ -93,16 +116,86 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         int viewType = getItemViewType(position);
         switch (viewType) {
 
+            case FIRST_ITEM_VIEWTYPE:
+
+            break;
             case MENU_ITEM_VIEW_TYPE:
                 MainDataModel model = (MainDataModel) mRecyclerViewItems.get(position);
-            MenuItemViewHolder mainHolder = (MenuItemViewHolder) holder;// holder
+            final MenuItemViewHolder mainHolder = (MenuItemViewHolder) holder;// holder
 
             if (model.getSourceIcon().toString() != "") {
                 Glide.with(context)
-                        .load(model.getSourceIcon().toString())
+                        .load(model.getSourceIcon().toString()).diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(mainHolder.sourceIcon);
             }
-            Glide.with(context)
+            /*
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+                //save scaled down image to cache dir
+                try {
+                    newBitmap = Glide.
+                            with(context).
+                            load(model.getInfographicImage().toString()).
+                            asBitmap().
+                            into(100, 100).get();
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+*/
+            /*
+                Glide.with(context)
+                        .load(model.getInfographicImage().toString())
+                        .asBitmap()
+                        .into(new BitmapImageViewTarget(mainHolder.infographicImage) {
+                            @Override
+                            protected void setResource(Bitmap resource) {
+                                //Play with bitmap
+                                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                                resource.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                                super.setResource(resource);
+                            }
+                        });
+
+
+
+
+
+
+
+*/
+/*
+                RequestListener<String, GlideDrawable> glideDrawableRequestListener = new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        Bitmap bitmap = ((GlideBitmapDrawable) resource).getBitmap();
+                        if (bitmap != null) {
+                            Context context = mainHolder.infographicImage.getContext();
+                            PaletteLoader.with(context, model)
+                                    .load(bitmap)
+                                    .setPaletteRequest(new PaletteRequest(PaletteRequest.SwatchType.REGULAR_VIBRANT, PaletteRequest.SwatchColor.BACKGROUND))
+                                    .into(mainHolder.infographicImage);
+
+                        }
+                        return false;
+                    }
+                };
+
+*/
+
+
+
+
+
+
+                Glide.with(context)
                     .load(model.getInfographicImage().toString())
                     .into(mainHolder.infographicImage);
 
@@ -112,6 +205,10 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             mainHolder.sourceName.setText(model.getSourceName());
 
             mainHolder.infographicName.setText(model.getInfographicName());
+
+            mainHolder.like_counter.setText(model.getLike_counter());
+
+            mainHolder.seen_counter.setText(model.getSeen_counter());
                 break;
 
             case NATIVE_EXPRESS_AD_VIEW_TYPE:
@@ -148,6 +245,9 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         switch (viewType) {
+
+
+
             case MENU_ITEM_VIEW_TYPE:
                 LayoutInflater mInflater = LayoutInflater.from(viewGroup.getContext());
 
@@ -155,6 +255,14 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         R.layout.test_card_layout, viewGroup, false);
                 MenuItemViewHolder listHolder = new MenuItemViewHolder(mainGroup, context,  mRecyclerViewItems);
                 return listHolder;
+
+            case FIRST_ITEM_VIEWTYPE:
+                LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+
+                ViewGroup maingroup = (ViewGroup) inflater.inflate(
+                        R.layout.title_item, viewGroup, false);
+                FirstItemViewHolder listholder = new FirstItemViewHolder(maingroup);
+                return listholder;
 
             case NATIVE_EXPRESS_AD_VIEW_TYPE:
                 // fall through
@@ -169,11 +277,28 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
     }
+
+    public class FirstItemViewHolder extends RecyclerView.ViewHolder {
+        public TextView listTitle;
+
+
+
+
+        public FirstItemViewHolder(View itemView) {
+            super(itemView);
+            this.listTitle = (TextView) itemView.findViewById(R.id.tx_list_title);
+
+        }
+    }
+
+
     public class MenuItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView infographicName;
         public TextView sourceName;
         public ImageView sourceIcon;
         public ImageView infographicImage;
+        public TextView like_counter;
+        public TextView seen_counter;
 
 
         private final List<Object> MainList ;
@@ -199,6 +324,9 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             this.infographicImage = (ImageView) view
                     .findViewById(R.id.im_infographic);
 
+            this.like_counter = (TextView) view.findViewById(R.id.tx_fav_counter);
+
+            this.seen_counter = (TextView) view.findViewById(R.id.tx_seen_counter);
 
 
         }

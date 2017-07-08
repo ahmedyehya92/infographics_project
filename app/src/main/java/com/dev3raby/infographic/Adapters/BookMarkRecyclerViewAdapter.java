@@ -55,6 +55,9 @@ public class BookMarkRecyclerViewAdapter  extends
 
         mainHolder.infographicName.setText(model.getInfographicName());
 
+        mainHolder.like_counter.setText(model.getLike_counter());
+
+        mainHolder.seen_counter.setText(model.getSeen_counter());
 
 
     }
