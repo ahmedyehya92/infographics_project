@@ -45,6 +45,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
     String userId;
     ViewHolder viewHolder;
     View listItemView;
+    ArrayList<Integer> arrayList = new ArrayList<>();
     private static boolean followed = false;
 
 
@@ -172,7 +173,8 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                             notifyDataSetChanged(); */
 
                             removeListItem(getViewByPosition(position,FollowinActivity.mListView),position);
-                            Toast.makeText(context, "تمت متابعة القسم " ,Toast.LENGTH_SHORT).show();
+                            FollowinActivity.arrayListFollowed.add(1);
+                            Toast.makeText(context, "تمت المتابعة" ,Toast.LENGTH_SHORT).show();
 
                         }
                         else

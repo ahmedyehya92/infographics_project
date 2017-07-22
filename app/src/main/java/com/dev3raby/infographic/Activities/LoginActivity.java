@@ -2,12 +2,16 @@ package com.dev3raby.infographic.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -19,6 +23,7 @@ import com.dev3raby.infographic.App.AppController;
 import com.dev3raby.infographic.Helper.SQLiteHandler;
 import com.dev3raby.infographic.Helper.SessionManager;
 import com.dev3raby.infographic.R;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,12 +41,21 @@ public class LoginActivity extends AppCompatActivity {
     private SessionManager session;
     private SQLiteHandler db;
     private static Integer repeateConnection=0;
+    Snackbar snackbar;
+    private LinearLayout linearLayout;
+    private String token;
+    SharedPreferences sharedpreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+       // token = FirebaseInstanceId.getInstance().getToken();
+        sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        linearLayout = (LinearLayout) findViewById(R.id
+                .linearLayout);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -139,21 +153,25 @@ public class LoginActivity extends AppCompatActivity {
                         // Inserting row in users table
                         db.addUser(user_id,name, email, uid, created_at);
 
+                        sharedpreferences.edit().putBoolean("token_sent", true).apply();
+
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
                                 HomeActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
+                        sharedpreferences.edit().putBoolean("token_sent", false).apply();
                         // Error in login. Get the error message
                         final String errorMsg = jObj.getString("message");
-
+                        snackbar = Snackbar
+                                .make(linearLayout, errorMsg, Snackbar.LENGTH_LONG);
+                        snackbar.show();
                         //showAlertDialog(errorMsg);
                     }
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
 
                 }
@@ -167,8 +185,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (repeateConnection <= 3)
                 {
+
                     checkLogin(email, password);
-                    Toast.makeText(LoginActivity.this,"error",Toast.LENGTH_SHORT).show();
+                    snackbar = Snackbar
+                            .make(linearLayout, "تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                     repeateConnection++;
                 }
                 else
@@ -191,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("email", email);
                 params.put("password", password);
-
+                params.put("token", FirebaseInstanceId.getInstance().getToken());
                 return params;
             }
 

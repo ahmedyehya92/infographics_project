@@ -32,7 +32,7 @@ public class FCMRegistrationService extends IntentService {
 
     SharedPreferences sharedpreferences;
     private  String apiKey;
-    private  String user_id;
+    private  String email;
     private String token;
 
     private SQLiteHandler db;
@@ -45,7 +45,10 @@ public class FCMRegistrationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        apiKey = "61dfee3914dbb0d77199cbc5d9d483a3";
+        db = new SQLiteHandler(getApplicationContext());
+        HashMap<String, String> user = db.getUserDetails();
+        email = user.get("email");
+        apiKey = user.get("uid");
         token = FirebaseInstanceId.getInstance().getToken();
         sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -54,18 +57,18 @@ public class FCMRegistrationService extends IntentService {
             if (refreshed) sharedpreferences.edit().putBoolean("token_sent", false).apply();
         }
             if (!sharedpreferences.getBoolean("token_sent", false)) {
-                addToken(token, apiKey);
+                updateToken(token, email, apiKey);
             }
 
     }
 
-    private void addToken(final String token, final String apiKey) {
+    private void updateToken(final String token,final String email, final String apiKey) {
         // Tag used to cancel the request
 
         String tag_string_req = "req_add_token";
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                AppConfig.URL_ADD_TOKEN, new Response.Listener<String>() {
+                AppConfig.URL_UPDATE_TOKEN, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -122,7 +125,7 @@ public class FCMRegistrationService extends IntentService {
                 Map<String, String> params = new HashMap<String, String>();
 
                 params.put("token",token);
-
+                params.put("email", email);
 
                 return params;
             }

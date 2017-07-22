@@ -16,7 +16,7 @@ public class AppConfig {
     public static final String URL_GET_CATEGORIES = "http://67.207.92.231/infographics_manager_beta/v1/categories";
     public static final String URL_Follow_Action = "http://67.207.92.231/infographics_manager_beta/v1/followaction";
     public static final String URL_GET_CATEGORISED_INFOGRAPHICS = "http://67.207.92.231/infographics_manager_beta/v1/infographicscatg";
-    public static final String URL_ADD_TOKEN = "http://67.207.92.231/infographics_manager_beta/v1/inserttoken";
+    public static final String URL_UPDATE_TOKEN = "http://67.207.92.231/infographics_manager_beta/v1/updatetoken";
     public static final String URL_SEARCH = "http://67.207.92.231/infographics_manager_beta/v1/searchedinfographics";
     public static final String URL_GET_NOTIFIED_INFOGRAPHICS = "http://67.207.92.231/infographics_manager_beta/v1/notifiedinfographics";
 

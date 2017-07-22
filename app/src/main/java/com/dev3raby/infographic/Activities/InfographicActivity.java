@@ -1,9 +1,15 @@
 package com.dev3raby.infographic.Activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +35,8 @@ import com.dev3raby.infographic.App.AppConfig;
 import com.dev3raby.infographic.App.AppController;
 import com.dev3raby.infographic.Helper.SQLiteHandler;
 import com.dev3raby.infographic.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -37,9 +45,12 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -57,7 +68,8 @@ public class InfographicActivity extends AppCompatActivity {
     private boolean bookmarked = false;
     private static Bitmap bitmapShare;
     private SQLiteHandler db;
-
+    RelativeLayout relativeLayout;
+    Snackbar snackbar;
 
     String id;
     final String idKey = "idKey";
@@ -71,8 +83,7 @@ public class InfographicActivity extends AppCompatActivity {
     private TextView likeText, seeText;
     private Animation bottomBarAnimShow, bottomBarAnimHide, toolbarAnimationShow, toolbarAnimationHide;
     View mDecorView;
-
-
+    public static Uri uriOfImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +144,7 @@ public class InfographicActivity extends AppCompatActivity {
 
     public void initViews()
     {
+        relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDecorView = getWindow().getDecorView();
@@ -302,6 +314,9 @@ public class InfographicActivity extends AppCompatActivity {
                             e.printStackTrace();
                         } */
 
+
+
+
                         Glide
                                 .with( InfographicActivity.this ) // could be an issue!
                                 .load( infographic.getString("image_url" ))
@@ -332,7 +347,7 @@ public class InfographicActivity extends AppCompatActivity {
                         link = infographic.getString("source_url");
 
                         likeText.setText(infographic.getString("like_counter"));
-
+                        seeText.setText(infographic.getString("seen"));
 
 
 
@@ -347,7 +362,6 @@ public class InfographicActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(InfographicActivity.this, "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
 
                 }
@@ -357,6 +371,9 @@ public class InfographicActivity extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                snackbar = Snackbar
+                        .make(relativeLayout, "تعذر التحديث تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                snackbar.show();
                 if (repeateConnection == 0) {
                     toolbar.setVisibility(View.VISIBLE);
                     toolbar.startAnimation(toolbarAnimationShow);
@@ -457,7 +474,6 @@ public class InfographicActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(InfographicActivity.this, "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
 
                 }
@@ -472,7 +488,9 @@ public class InfographicActivity extends AppCompatActivity {
                 if (repeateConnection <= 3)
                 {
                     likeAction(user_id,infographic_id, api_key);
-                    Toast.makeText(InfographicActivity.this,"error",Toast.LENGTH_SHORT).show();
+                    snackbar = Snackbar
+                            .make(relativeLayout, "تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                     repeateConnection++;
                 }
                 else
@@ -546,6 +564,7 @@ public class InfographicActivity extends AppCompatActivity {
                         {
                             bookmarkButton.setBackgroundResource(R.drawable.ic_bookmark);
                             bookmarked = true;
+                            Toast.makeText(InfographicActivity.this, "تم حفظ الإنفوجرافيك لمشاهدته لاحقا",Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -563,7 +582,6 @@ public class InfographicActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(InfographicActivity.this, "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
 
                 }
@@ -578,8 +596,9 @@ public class InfographicActivity extends AppCompatActivity {
                 if (repeateConnection <= 3)
                 {
                     bookmarkAction(user_id,infographic_id, api_key);
-                    Toast.makeText(InfographicActivity.this,"error",Toast.LENGTH_SHORT).show();
-                    repeateConnection++;
+                    snackbar = Snackbar
+                            .make(relativeLayout, "تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                    snackbar.show();                    repeateConnection++;
                 }
                 else
                 {
@@ -639,23 +658,90 @@ public class InfographicActivity extends AppCompatActivity {
 
 public void startShare()
 {
-    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-    shareIntent.setType("image/jpeg");
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    bitmapShare.compress(Bitmap.CompressFormat.JPEG,100, byteArrayOutputStream);
-    File file = new File(Environment.getExternalStorageDirectory()+ File.separator+ "image.jpg");
+    boolean permisionResult = isWritExternalStoragePermissionGranted();
+    if(permisionResult==true)
+    {
+        String pathofBmp = MediaStore.Images.Media.insertImage(getContentResolver(), bitmapShare,"title", null);
+        Uri bmpUri = Uri.parse(pathofBmp);
 
-    try {
-        file.createNewFile();
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        fileOutputStream.write(byteArrayOutputStream.toByteArray());
-    } catch (IOException e) {
-        e.printStackTrace();
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+        shareIntent.setType("image/jpg");
+        startActivity(Intent.createChooser(shareIntent,"مشاركة الإنفوجرافيك"));
+    }
+    else
+    {
+
     }
 
-    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://sdcard/image.jpg"));
-    startActivity(Intent.createChooser(shareIntent,"مشاركة الإنفوجرافيك"));
 }
 
+    private void file (Bitmap image) {
+        File pictureFile = getOutputMediaFile();
+        if (pictureFile == null) {
 
+            Toast.makeText(InfographicActivity.this, "Error creating media file, check storage permissions: ",Toast.LENGTH_SHORT).show();
+
+
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Toast.makeText(InfographicActivity.this, "File not found: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+
+
+        } catch (IOException e) {
+            Toast.makeText(InfographicActivity.this, "Error accessing file: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
+    private  File getOutputMediaFile(){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + getApplicationContext().getPackageName()
+                + "/Files");
+
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName="MI_"+ timeStamp +".jpg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        uriOfImage =Uri.fromFile(getFileStreamPath(mImageName));
+        return mediaFile;
+    }
+
+    public  boolean isWritExternalStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v("per","Permission is granted");
+                return true;
+            } else {
+
+                Log.v("per","Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v("per","Permission is granted");
+            return true;
+        }
+    }
 }

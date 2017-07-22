@@ -3,12 +3,15 @@ package com.dev3raby.infographic.Activities;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,12 +42,17 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
+    Snackbar snackbar;
+    private RelativeLayout relativeLayout;
+    private static Integer repeateConnection=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        relativeLayout = (RelativeLayout) findViewById(R.id
+                .relativelayout);
         inputFullName = (EditText) findViewById(R.id.name);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
@@ -114,6 +122,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.d(TAG, "Register Response: " + response.toString());
                 hideDialog();
+                repeateConnection=0;
 
                 try {
                     JSONObject jObj = new JSONObject(response);
@@ -138,12 +147,16 @@ public class RegisterActivity extends AppCompatActivity {
                         // Launch login activity
                         final String id_key = "idKey";
                         final String api_key = "apiKey";
+                        final String email_key = "emailKey";
+                        final String password_key = "passwordKey";
 
                         Intent intent = new Intent(
                                 RegisterActivity.this,
                                 FollowinActivity.class);
                         intent.putExtra(id_key,user_id);
                         intent.putExtra(api_key,uid);
+                        intent.putExtra(email_key,email);
+                        intent.putExtra(password_key,password);
                         startActivity(intent);
                         finish();
                     } else {
@@ -151,7 +164,10 @@ public class RegisterActivity extends AppCompatActivity {
                         // Error occurred in registration. Get the error
                         // message
                         String errorMsg = jObj.getString("message");
-                      //  showAlertDialog(errorMsg);
+                        snackbar = Snackbar
+                                .make(relativeLayout, errorMsg, Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                        //  showAlertDialog(errorMsg);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -163,9 +179,22 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Registration Error: " + error.getMessage());
-                hideDialog();
-                String msg = "خطأ في الإتصال برجاء المحاولة لاحقا";
-              //  showAlertDialog(msg);
+                if (repeateConnection <= 3)
+                {
+
+                    registerUser(name, email, password);
+                    snackbar = Snackbar
+                            .make(relativeLayout, "تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                    repeateConnection++;
+                }
+                else
+                {
+                    hideDialog();
+
+
+                }
+
             }
         }) {
 

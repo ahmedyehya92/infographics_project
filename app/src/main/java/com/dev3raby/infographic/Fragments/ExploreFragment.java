@@ -2,12 +2,14 @@ package com.dev3raby.infographic.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -49,6 +51,8 @@ public class ExploreFragment extends Fragment {
     public static final String[] CATEGORY_IMAGE = {"https://pbs.twimg.com/profile_images/694449140269518848/57ZmXva0.jpg", "http://richardhusovsky.com/wp-content/uploads/2015/06/ranni-beh.jpg", "http://www.fitnesstrend.com/sites/default/files/Stetoscopio%20WEB_1.jpg", "https://blog.holidaylettings.co.uk/wp-content/uploads/2015/04/lifestyle.jpg"};
     CategoryRecyclerViewAdapter catgAdapter;
 
+    RelativeLayout relativeLayout;
+    Snackbar snackbar;
 
     public ExploreFragment() {
 
@@ -83,6 +87,7 @@ public class ExploreFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_explore,container,false);
         catgRecyclerView = (RecyclerView)
                 rootView.findViewById(R.id.catg_recycler_view);
+        relativeLayout = (RelativeLayout) rootView.findViewById(R.id.relativelayout);
         return rootView;
 
     }
@@ -180,7 +185,6 @@ public class ExploreFragment extends Fragment {
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
 
                 }
@@ -195,7 +199,9 @@ public class ExploreFragment extends Fragment {
                 if (repeateConnection <= 3)
                 {
                     getCategories(api_key);
-                    Toast.makeText(getActivity(),"error",Toast.LENGTH_SHORT).show();
+                    snackbar = Snackbar
+                            .make(relativeLayout, "تعذر التحديث تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                     repeateConnection++;
                 }
                 else

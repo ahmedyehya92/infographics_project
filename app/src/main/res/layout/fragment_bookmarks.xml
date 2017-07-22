@@ -8,7 +8,9 @@
 
 
 <RelativeLayout
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/relativelayout"
+    >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_recycler_view"
@@ -16,6 +18,29 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:scrollbars="none" />
+
+<LinearLayout
+    android:id="@+id/empty_bookmark_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    android:layout_centerInParent="true"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/empty_boo"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/btnComment"
+        android:text="لم تقم بحفظ أي انفوجرافيك بعد"
+        />
+</LinearLayout>
 
 </RelativeLayout>
 

@@ -1,6 +1,8 @@
 package com.dev3raby.infographic.Activities;
 
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +27,8 @@ import com.dev3raby.infographic.App.AppController;
 import com.dev3raby.infographic.DataModels.MainDataModel;
 import com.dev3raby.infographic.Helper.SQLiteHandler;
 import com.dev3raby.infographic.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,6 +57,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     String queryC;
     final String notificationKey = "idKey";
     String notificationId;
+    private AdView mAdView;
+    CoordinatorLayout coordinatorLayout;
+    Snackbar snackbar;
 
 
 
@@ -60,6 +67,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
         Intent idIntent = getIntent();
         notificationId = idIntent.getStringExtra(notificationKey);
         initiView();
@@ -98,6 +109,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     public void initiView()
     {
+        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
         mSearchView = (SearchView) findViewById(R.id.search_view);
         backButton = (Button) findViewById(R.id.btn_back);
     }
@@ -303,7 +315,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(SearchActivity.this, "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
 
                 }
@@ -318,7 +329,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 if (repeateConnection <= 3)
                 {
                     searchQuery(nPage, query, api_key);
-                    Toast.makeText(SearchActivity.this,"error",Toast.LENGTH_SHORT).show();
+                    snackbar = Snackbar
+                            .make(coordinatorLayout, "تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                     repeateConnection++;
                 }
                 else
@@ -435,7 +448,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(SearchActivity.this, "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
 
                 }
@@ -450,7 +462,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 if (repeateConnection <= 3)
                 {
                     getInfographics(api_key, categoryId);
-                    Toast.makeText(SearchActivity.this,"error",Toast.LENGTH_SHORT).show();
+                    snackbar = Snackbar
+                            .make(coordinatorLayout, "تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                     repeateConnection++;
                 }
                 else

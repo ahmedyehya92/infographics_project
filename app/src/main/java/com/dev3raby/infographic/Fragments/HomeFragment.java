@@ -1,5 +1,6 @@
 package com.dev3raby.infographic.Fragments;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -69,6 +71,9 @@ public class HomeFragment extends Fragment {
     private static RecyclerView mainRecyclerView;
     MainRecyclerViewAdapter adapter;
 
+    RelativeLayout relativeLayout;
+    Snackbar snackbar;
+
     public static final String[] SOURCE_NAME= {"Saud Aljaber", "أحمد العربي", "maloomaday.com", "Ali.Kindy", "arinfographic","arinfographic"};
     public static final String[] INFOGRAPHIC_NAME= {"مراحل عملية التسويق", "التخزين السحابي", "كيف يمكن تحفيز الناس", "8 مؤشرات مرتبطة بمنفذي العمليات الانتحارية", "احصائيات العاب الفيديو حول العالم", "القادة والمدراء التربويين"};
     public static final String[] INFOGRAPHIC_IMAGE = {"https://shamssona.files.wordpress.com/2015/08/img_20150814_162450.jpg", "http://everyleader.net/sites/default/files/Infographic-every-leader-confrontations.jpg.png", "http://www.alarabyanews.com/upload/photo/gallery/9/7/960.jpg", "https://www.graphic-academy.com/wp-content/uploads/2016/05/image-11.jpeg", "https://s-media-cache-ak0.pinimg.com/736x/71/63/64/71636447376825c06dba6426110a2d91.jpg","https://mir-s3-cdn-cf.behance.net/project_modules/disp/741fe716989131.562b415c27a27.jpg"};
@@ -120,7 +125,7 @@ public class HomeFragment extends Fragment {
                 rootView.findViewById(R.id.main_recycler_view);
 
 
-
+        relativeLayout = (RelativeLayout)rootView.findViewById(R.id.relativelayout);
         implementScrollListener();
 
         return rootView;
@@ -259,7 +264,6 @@ public class HomeFragment extends Fragment {
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
 
                 }
@@ -274,7 +278,9 @@ public class HomeFragment extends Fragment {
                 if (repeateConnection <= 3)
                 {
                     getInfographics(nPage, user_id, api_key);
-                    Toast.makeText(getActivity(),"error",Toast.LENGTH_SHORT).show();
+                    snackbar = Snackbar
+                            .make(relativeLayout, "تعذر التحديث تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                     repeateConnection++;
                 }
                 else

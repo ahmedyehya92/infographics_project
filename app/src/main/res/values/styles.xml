@@ -29,7 +29,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/btn_login_text</item>
+        <item name="colorAccent">@color/colorBlack</item>
 
     </style>
 

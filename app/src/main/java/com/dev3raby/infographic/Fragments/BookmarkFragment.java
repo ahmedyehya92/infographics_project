@@ -2,6 +2,7 @@ package com.dev3raby.infographic.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -52,6 +55,9 @@ public class BookmarkFragment extends Fragment {
     ArrayList<MainDataModel> arrayList = new ArrayList<>();
     BookMarkRecyclerViewAdapter adapter;
     SwipeRefreshLayout swipLayout;
+    LinearLayout linearLayout;
+    RelativeLayout relativeLayout;
+    Snackbar snackbar;
 
 
 
@@ -96,7 +102,11 @@ public class BookmarkFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_bookmarks,container,false);
         mainRecyclerView = (RecyclerView)
                 rootView.findViewById(R.id.main_recycler_view);
+        linearLayout = (LinearLayout)
+                rootView.findViewById(R.id.empty_bookmark_layout);
         swipLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+
+        relativeLayout = (RelativeLayout) rootView.findViewById(R.id.relativelayout);
 
         implementScrollListener();
 
@@ -110,6 +120,7 @@ public class BookmarkFragment extends Fragment {
         LinearLayoutManager testLayoutManager = new LinearLayoutManager(getContext());
         mainRecyclerView
                 .setLayoutManager(testLayoutManager);
+
         populatRecyclerView();
         swipLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -196,11 +207,18 @@ public class BookmarkFragment extends Fragment {
                         // Create login session
 
                         jsonArray = jObj.getJSONArray("infographics");
-                        if (jsonArray.length()==0)
+
+                        if ((jsonArray.length()==0)&&(arrayList.isEmpty()))
+                        {
+                            linearLayout.setVisibility(View.VISIBLE);
+                        }
+
+                        else if (jsonArray.length()==0)
                         {
                             lastItem = true;
 
                         }
+
 
                         else {
 
@@ -263,7 +281,6 @@ public class BookmarkFragment extends Fragment {
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
 
                 }
@@ -278,7 +295,9 @@ public class BookmarkFragment extends Fragment {
                 if (repeateConnection <= 3)
                 {
                     getBookmark(nPage, user_id, api_key);
-                    Toast.makeText(getActivity(),"error",Toast.LENGTH_SHORT).show();
+                    snackbar = Snackbar
+                            .make(relativeLayout, "تعذر التحديث تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                     repeateConnection++;
                 }
                 else

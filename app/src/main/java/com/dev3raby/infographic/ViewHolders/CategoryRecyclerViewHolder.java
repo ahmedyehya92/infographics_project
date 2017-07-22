@@ -50,7 +50,7 @@ public class CategoryRecyclerViewHolder extends RecyclerView.ViewHolder implemen
         int position = getAdapterPosition();
         CategoryDataModel item = this.categoriesList.get(position);
 
-        Toast.makeText(contextA,item.getCategoryName(),Toast.LENGTH_LONG).show();
+
 
         Intent intent = new Intent(this.contextA, CatgInfographicsActivity.class);
         intent.putExtra(categoryIdKey,item.getId());

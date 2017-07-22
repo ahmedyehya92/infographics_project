@@ -7,8 +7,10 @@
     android:background="@color/bg_register"
     tools:context="com.dev3raby.infographic.Activities.RegisterActivity">
     <RelativeLayout
+        android:id="@+id/relativelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:padding="15dp">
 
 
@@ -19,9 +21,7 @@
             card_view:cardCornerRadius="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:elevation="15dp"
+            card_view:cardUseCompatPadding="true"
 
             >
             <LinearLayout
@@ -98,9 +98,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:background="#E91E63"
+            android:background="@color/btn_login_bg"
             android:text="@string/btn_register"
-            android:textColor="@color/white" />
+            android:textColor="@color/colorBlack" />
 
         <!-- Link to Login Screen -->
 

@@ -1,6 +1,8 @@
 package com.dev3raby.infographic.Activities;
 
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,6 +58,8 @@ public class CatgInfographicsActivity extends AppCompatActivity {
     private String category_name;
     Integer page = 1;
     private TextView catgTitle;
+    CoordinatorLayout coordinatorLayout;
+    Snackbar snackbar;
 
 
 
@@ -121,6 +125,7 @@ public class CatgInfographicsActivity extends AppCompatActivity {
         catgTitle = (TextView) findViewById(R.id.tx_category_title);
         followButton = (Button) findViewById(R.id.btn_follow);
         backButton = (Button) findViewById(R.id.btn_back);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
     }
 
     public boolean isFollowed ()
@@ -273,7 +278,6 @@ public class CatgInfographicsActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(CatgInfographicsActivity.this, "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
 
                 }
@@ -288,13 +292,15 @@ public class CatgInfographicsActivity extends AppCompatActivity {
                 if (repeateConnection <= 3)
                 {
                     getInfographics(nPage, user_id, api_key, categoryId);
-                    Toast.makeText(CatgInfographicsActivity.this,"error",Toast.LENGTH_SHORT).show();
                     repeateConnection++;
                 }
                 else
                 {
 
                     String msg = "خطأ في الإتصال برجاء المحاولة لاحقا";
+                    snackbar = Snackbar
+                            .make(coordinatorLayout, "تعذر تحديث البيانات! تحقق من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                     //showAlertDialog(msg);
 
 
@@ -366,7 +372,9 @@ public class CatgInfographicsActivity extends AppCompatActivity {
                             notifyDataSetChanged(); */
 
 
-                            Toast.makeText(CatgInfographicsActivity.this, "تمت المتابعة" ,Toast.LENGTH_SHORT).show();
+                            snackbar = Snackbar
+                                    .make(coordinatorLayout, "تمت متابعة القسم", Snackbar.LENGTH_LONG);
+                            snackbar.show();
 
                         }
                         else
@@ -376,8 +384,10 @@ public class CatgInfographicsActivity extends AppCompatActivity {
                             followButton.setTextColor(getResources().getColor(R.color.actionButtons));
                             followButton.setText(getResources().getString(R.string.follow_btn));
 
-                            Toast.makeText(CatgInfographicsActivity.this,"تم الغاء المتابعة",Toast.LENGTH_SHORT).show();
 
+                            snackbar = Snackbar
+                                    .make(coordinatorLayout, "تم إلغاء المتابعة", Snackbar.LENGTH_LONG);
+                            snackbar.show();
 
                         }
 
@@ -393,7 +403,7 @@ public class CatgInfographicsActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     // JSON error
                     e.printStackTrace();
-                    Toast.makeText(CatgInfographicsActivity.this, "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
 
 
                 }
@@ -410,7 +420,9 @@ public class CatgInfographicsActivity extends AppCompatActivity {
                 //showAlertDialog(msg);
 
                 Toast.makeText(CatgInfographicsActivity.this,msg,Toast.LENGTH_SHORT).show();
-
+                snackbar = Snackbar
+                        .make(coordinatorLayout, "خطأ في الإتصال تأكد من اتصالك بالشبكة", Snackbar.LENGTH_LONG);
+                snackbar.show();
 
             }
         }) {
