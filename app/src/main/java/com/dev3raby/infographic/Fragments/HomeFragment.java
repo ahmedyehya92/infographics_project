@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -59,15 +60,15 @@ public class HomeFragment extends Fragment {
     private static JSONObject infographic;
     private static boolean lastItem;
     Integer repeateConnection=0;
-    private static final int NATIVE_EXPRESS_AD_HEIGHT = 150;
-    private static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/1072772517";
+    private static final int NATIVE_EXPRESS_AD_HEIGHT = 320;
+    private static final String AD_UNIT_ID = "ca-app-pub-6032440957109327/9520551090";
     public static int ITEMS_PER_AD ;
     public static boolean AD;
     public static int isThereAds = 1;
-
+    CardView cardView;
     private List<Object> mRecyclerViewItems = new ArrayList<>();
     private List<Object> typeItemList = new ArrayList<>();
-
+    private int width;
     private static RecyclerView mainRecyclerView;
     MainRecyclerViewAdapter adapter;
 
@@ -108,6 +109,7 @@ public class HomeFragment extends Fragment {
         typeItemList.add(new LayoutTypeModel(2));
         mRecyclerViewItems.add(2);  // any thing just for reserve item in recyclerview
 
+
         getInfographics(page,user_id,apiKey);
 
 
@@ -116,14 +118,22 @@ public class HomeFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
+
         mainRecyclerView = (RecyclerView)
                 rootView.findViewById(R.id.main_recycler_view);
-
+        View adContainer = inflater.inflate(R.layout.native_express_ad_container,container,false);
+        cardView = (CardView) adContainer.findViewById(R.id.ad_card_view);
 
         relativeLayout = (RelativeLayout)rootView.findViewById(R.id.relativelayout);
         implementScrollListener();
@@ -144,7 +154,6 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
 
 
 
@@ -226,7 +235,7 @@ public class HomeFragment extends Fragment {
                                 loading = true;
                             }
 
-                            addNativeAds();
+                            addNativeAdsT();
 
                             typeItemList.add(new LayoutTypeModel(0));
 
@@ -483,6 +492,30 @@ public class HomeFragment extends Fragment {
             adView.loadAd(new AdRequest.Builder().build());
             AD= true;
             mRecyclerViewItems.add(adView);
+
+
+    }
+
+    private void addNativeAdsT()
+    {
+
+
+
+        mainRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                final float scale = getActivity().getResources().getDisplayMetrics().density;
+                NativeExpressAdView adView = new NativeExpressAdView(getActivity());
+
+                final int adWidth = mainRecyclerView.getWidth();
+                AdSize adSize = new AdSize((int) (adWidth / scale), NATIVE_EXPRESS_AD_HEIGHT);
+                adView.setAdSize(adSize);
+                adView.setAdUnitId(AD_UNIT_ID);
+                adView.loadAd(new AdRequest.Builder().build());
+                AD= true;
+                mRecyclerViewItems.add(adView);
+            }
+        });
 
 
     }

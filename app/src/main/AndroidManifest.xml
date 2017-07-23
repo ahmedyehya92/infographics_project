@@ -22,13 +22,6 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".Activities.MainActivity"
-            android:theme="@style/Base.Theme.DesignDemo">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".Activities.HomeActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Base.Theme.DesignDemo">
