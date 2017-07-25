@@ -69,7 +69,7 @@ public class CatgInfoRecyclerViewHolder extends RecyclerView.ViewHolder implemen
         int position = getAdapterPosition();
         CatgInfoDataModel item = this.MainList.get(position);
 
-        Toast.makeText(contextA,item.getInfographicName(),Toast.LENGTH_LONG).show();
+
         Intent intent = new Intent(this.contextA, InfographicActivity.class);
         intent.putExtra(id_key,item.getCIId());
 

@@ -14,4 +14,10 @@
     <string name="btn_login">Log in</string>
     <string name="btn_link_to_register">Do not have account! Sign up now</string>
     <string name="banner_home_footer" translatable="false">ca-app-pub-6032440957109327/6925717894</string>
+    <string name="facebook_app_id" translatable="false">480876635581729</string>
+    <string name="tx_another_way_to_login">or connect with:</string>
+    <string name="register_pdialog">Registering ...</string>
+    <string name="faild_facebook_reg">Failed Facebook Registration</string>
+    <string name="faild_google_reg">Failed google registration</string>
+    <string name="login_pdialog">Login...</string>
 </resources>
