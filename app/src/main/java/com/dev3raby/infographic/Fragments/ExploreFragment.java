@@ -94,7 +94,7 @@ public class ExploreFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        StaggeredGridLayoutManager catgLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager catgLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         catgRecyclerView
                 .setLayoutManager(catgLayoutManager);
         populatRecyclerView();

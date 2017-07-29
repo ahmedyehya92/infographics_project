@@ -1,9 +1,12 @@
 package com.dev3raby.infographic.Activities;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -80,6 +83,8 @@ public class RegisterActivity extends AppCompatActivity implements
     final String facebookSignType = "facebook";
     final String googleSignType = "google";
     final String subFakeEmail = "@facebook.com";
+    String ip = "non";
+    String country = "non";
 
 
     @Override
@@ -88,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity implements
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_register);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
+        new RetrieveIp().execute();
         sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         callbackManager = CallbackManager.Factory.create();
@@ -193,7 +198,7 @@ public class RegisterActivity extends AppCompatActivity implements
         // Tag used to cancel the request
         String tag_string_req = "req_register";
 
-        pDialog.setMessage(getString(R.string.login_pdialog));
+        pDialog.setMessage(getString(R.string.register_pdialog));
         showDialog();
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -286,6 +291,8 @@ public class RegisterActivity extends AppCompatActivity implements
                 params.put("name", name);
                 params.put("email", email);
                 params.put("password", password);
+                params.put("device","Android");
+                params.put("country",country);
 
                 return params;
             }
@@ -548,6 +555,8 @@ public class RegisterActivity extends AppCompatActivity implements
                 params.put("email", email);
                 params.put("password", password);
                 params.put("sign_type",signType);
+                params.put("device","Android");
+                params.put("country",country);
                 return params;
             }
 
@@ -562,7 +571,7 @@ public class RegisterActivity extends AppCompatActivity implements
         // Tag used to cancel the request
         String tag_string_req = "req_login";
 
-        pDialog.setMessage("تسجيل الدخول ...");
+        pDialog.setMessage(getString(R.string.register_pdialog));
 
         showDialog();
 
@@ -695,5 +704,96 @@ public class RegisterActivity extends AppCompatActivity implements
         }).executeAsync();
     }
 
+    class RetrieveIp extends AsyncTask<String, String,String> {
+
+        private Exception exception;
+
+        protected String doInBackground(String... urls) {
+            getipify();
+            return null;
+        }
+
+
+    }
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void getipify() {
+
+        try (java.util.Scanner s = new java.util.Scanner(new java.net.URL("https://api.ipify.org").openStream(), "UTF-8").useDelimiter("\\A")) {
+            ip = s.next().toString();
+            getCountry(ip);
+
+
+
+        } catch (java.io.IOException e) {
+
+
+        }
+
+
+
+    }
+
+    private void getCountry(final String ipAdress) {
+        // Tag used to cancel the request
+        String tag_string_req = "req_login";
+
+
+
+
+        StringRequest strReq = new StringRequest(Request.Method.GET,
+                "https://ipfind.co?ip="+ipAdress+"&auth=cecd3c7e-cc6c-46d1-aa95-10fab50f4a94", new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+
+                repeateConnection=0;
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    country = jObj.getString("country");
+
+
+                    // Check for error node in json
+
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
+
+
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+
+                if (repeateConnection <= 3)
+                {
+
+                    getCountry(ipAdress);
+                    repeateConnection++;
+                }
+                else
+                {
+
+                    String msg = "خطأ في الإتصال برجاء المحاولة لاحقا";
+                    //showAlertDialog(msg);
+
+
+                }
+
+
+
+            }
+        }) {
+
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
 
 }

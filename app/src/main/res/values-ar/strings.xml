@@ -19,4 +19,8 @@
     <string name="faild_facebook_reg">فشل التسجيل عن طريق فيسبوك</string>
     <string name="faild_google_reg">فشل التسجيل عن طريق جوجل</string>
     <string name="login_pdialog">تسجيل الدخول...</string>
+    <string name="update_alert_text">نسخة التطبيق قديمة قم بالتحديث الآن ليعمل التطبيق بشكل سليم</string>
+    <string name="btn_update">تحديث</string>
+    <string name="btn_exit">خروج</string>
+    <string name="title_update_dialog">تحديث جديد</string>
 </resources>

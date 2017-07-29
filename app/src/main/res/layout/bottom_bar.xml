@@ -24,9 +24,10 @@
     >
 
         <Button
+            android:gravity="center"
             android:id="@+id/btn_visit"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="30dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_centerVertical="true"
@@ -36,7 +37,7 @@
             android:text="@string/visit_button"
             android:textAllCaps="false"
             android:textColor="@color/colorBlack"
-            android:textSize="16sp"
+            android:textSize="14sp"
             />
         <!--
         <Button

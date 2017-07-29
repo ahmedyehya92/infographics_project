@@ -20,4 +20,8 @@
     <string name="faild_facebook_reg">Failed Facebook Registration</string>
     <string name="faild_google_reg">Failed google registration</string>
     <string name="login_pdialog">Login...</string>
+    <string name="update_alert_text">Version of the application is outdated, update to run the application properly</string>
+    <string name="btn_update">Update</string>
+    <string name="btn_exit">exit</string>
+    <string name="title_update_dialog">New Update</string>
 </resources>

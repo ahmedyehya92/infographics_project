@@ -20,6 +20,7 @@ public class AppConfig {
     public static final String URL_SEARCH = "http://67.207.92.231/infographics_manager_beta/v1/searchedinfographics";
     public static final String URL_GET_NOTIFIED_INFOGRAPHICS = "http://67.207.92.231/infographics_manager_beta/v1/notifiedinfographics";
     public static final String URL_REGISTER_ANOTHER_WAY = "http://67.207.92.231/infographics_manager_beta/v1/anotherlogin";
+    public static final String URL_CHECK_UPDATE = "http://67.207.92.231/infographics_manager_beta/v1/checkupdate";
 
 
 

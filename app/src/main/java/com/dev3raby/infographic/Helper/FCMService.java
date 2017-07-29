@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -36,10 +38,11 @@ public class FCMService extends FirebaseMessagingService {
     Bitmap largeIcon;
     Intent intent;
     int mesgNumber = 0;
+    String versionCode;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-
+        versionCode = getVersionInfo();
         sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("message"), remoteMessage.getData().get("type"), remoteMessage.getData().get("id"));
 
 
@@ -51,12 +54,26 @@ public class FCMService extends FirebaseMessagingService {
             intent = new Intent(this, SearchActivity.class);
             intent.putExtra(idKey,id);
         }
-        else
+        else if (type.equals("1"))
         {
             intent = new Intent(this, InfographicActivity.class);
             intent.putExtra(idKey,id);
 
         }
+
+        else if (type.equals("2"))
+        {
+
+
+                        intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=" + getPackageName()));
+
+
+        }
+
+
+
+
 
    /*     try {
             largeIcon = Glide
@@ -72,34 +89,54 @@ public class FCMService extends FirebaseMessagingService {
         }
         */
 
+        if (type.equals("2") && id.equals(versionCode))
+        {
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, getID() /* Request code */, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+        }
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setColor(rgb(39, 117, 244))
-                .setContentTitle(title)
-                .setContentText(messageBody)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+        else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, getID() /* Request code */, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setColor(rgb(39, 117, 244))
+                    .setContentTitle(title)
+                    .setContentText(messageBody)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(getID() /* ID of notification */, notificationBuilder.build());
+            notificationManager.notify(getID() /* ID of notification */, notificationBuilder.build());
+        }
     }
 
 
     private final static AtomicInteger c = new AtomicInteger(0);
     public static int getID() {
         return c.incrementAndGet();
+    }
+
+    private String getVersionInfo() {
+        String versionName = "";
+        Integer versionCode = -1;
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionName = packageInfo.versionName;
+            versionCode = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return versionCode.toString();
     }
 
 
